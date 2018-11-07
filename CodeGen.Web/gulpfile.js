@@ -43,6 +43,9 @@ gulp.task('copy-lib-js', function () {
 
     gulp.src('./node_modules/clipboard/dist/clipboard.min.js')
         .pipe(gulp.dest(root_path.package_lib + '/jquery/'));
+    ////試Copy Bower File when Publish
+    //gulp.src('./bower_components/*')
+    //    .pipe(gulp.dest(root_path.webroot + '/vendors/'));
 });
 
 gulp.task("copy-all", ["copy-lib-css", "copy-lib-js"]);
