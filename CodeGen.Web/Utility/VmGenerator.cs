@@ -10,6 +10,7 @@ namespace CodeGen.Web.Utility
 {
     public class VmGenerator
     {
+
         public static dynamic GenerateVm(List<vmColumn> tblColumns, string contentRootPath)
         {
             StringBuilder builderPrm = new StringBuilder();
@@ -19,12 +20,18 @@ namespace CodeGen.Web.Utility
 
             string tableName = tblColumns[0].Tablename; string tableSchema = tblColumns[0].TableSchema;
             string path = @"" + contentRootPath + "\\template\\ViewModel\\vmModel.txt";
-            string className = "vm" + tableName.ToString();
+            //string className = "vm" + tableName.ToString();
+            string className =tableName.ToString();
+            //針對每個Table處理
             foreach (var item in tblColumns)
             {
                 //parameter
                 builderPrm.AppendLine();
-                builderPrm.Append("  public " + TypeMap.GetClrType(item.DataType) + " " + item.ColumnName + " { get; set; }");
+                //builderPrm.Append("  public " + TypeMap.GetClrType(item.DataType) + " " + item.ColumnName + " { get; set; }");
+                //20181108 update:加上註解
+                builderPrm.Append($@"  
+/// <summary>{item.ColumnDescription}</summary>
+public {TypeMap.GetClrType(item.DataType)}  {item.ColumnName}  {{ get; set; }}");
             }
 
             queryPrm = builderPrm.AppendLine().ToString();

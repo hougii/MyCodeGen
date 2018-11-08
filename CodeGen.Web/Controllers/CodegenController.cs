@@ -83,6 +83,12 @@ namespace CodeGen.Web.Controllers
             return data.ToList();
         }
 
+        /// <summary>
+        /// 取得Database下指定Table的欄位資訊
+        /// </summary>
+        /// <remarks>這是取得Table下的Column清單，並會Keep至Web端</remarks>
+        /// <param name="model"></param>
+        /// <returns></returns>
         // api/Codegen/GetDatabaseTableColumnList
         [HttpPost, Route("GetDatabaseTableColumnList"), Produces("application/json")]
         public List<vmColumn> GetDatabaseTableColumnList([FromBody]vmParam model)
@@ -92,8 +98,30 @@ namespace CodeGen.Web.Controllers
             using (SqlConnection con = new SqlConnection(conString_))
             {
                 int count = 0; con.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT COLUMN_NAME, DATA_TYPE, ISNULL(CHARACTER_MAXIMUM_LENGTH,0), IS_NULLABLE, TABLE_SCHEMA FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + model.TableName + "' ORDER BY ORDINAL_POSITION", con))
+                //20181108-howard fix:改寫取得Column的資訊語法
+                //          --加上column 描述語法
+                //var sql = @"SELECT COLUMN_NAME, DATA_TYPE, ISNULL(CHARACTER_MAXIMUM_LENGTH,0), IS_NULLABLE, TABLE_SCHEMA FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName ORDER BY ORDINAL_POSITION";
+                var sql = @" select 
+	        st.name [Table],
+	        sc.name [Column],
+	        sep.value as [Description],
+		info.DATA_TYPE as [ColumnType],
+		ISNULL(info.CHARACTER_MAXIMUM_LENGTH,0) as [Length], 
+		info.IS_NULLABLE as [Nullable],
+		info.TABLE_SCHEMA as [Schema]
+    from sys.tables st  --此資料庫下的Table
+    inner join sys.columns sc on st.object_id = sc.object_id
+    left join sys.extended_properties sep on st.object_id = sep.major_id
+                                         and sc.column_id = sep.minor_id
+                                         and sep.name = 'MS_Description'
+   left join INFORMATION_SCHEMA.COLUMNS info on st.name= info.TABLE_NAME
+					 and sc.name = info.COLUMN_NAME
+    where st.name = @TableName
+";
+                using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
+                    //20181108-howard fix:改寫改用parameter的方式處理
+                    cmd.Parameters.AddWithValue("TableName", model.TableName);
                     using (IDataReader dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
@@ -102,12 +130,13 @@ namespace CodeGen.Web.Controllers
                             data.Add(new vmColumn()
                             {
                                 ColumnId = count,
-                                ColumnName = dr[0].ToString(),
-                                DataType = dr[1].ToString(),
-                                MaxLength = dr[2].ToString(),
-                                IsNullable = dr[3].ToString(),
+                                ColumnName = dr["Column"].ToString(),
+                                DataType = dr["ColumnType"].ToString(),
+                                MaxLength = dr["Length"].ToString(),
+                                IsNullable = dr["Nullable"].ToString(),
                                 Tablename = model.TableName.ToString(),
-                                TableSchema = dr[4].ToString()
+                                TableSchema = dr["Schema"].ToString(),
+                                ColumnDescription = dr["Description"].ToString()
                             });
                         }
                     }
@@ -118,6 +147,11 @@ namespace CodeGen.Web.Controllers
         #endregion
 
         #region +++++ CodeGeneration +++++
+        /// <summary>
+        /// 執行產生Code的觸發點
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         // api/Codegen/GenerateCode
         [HttpPost, Route("GenerateCode"), Produces("application/json")]
         public IActionResult GenerateCode([FromBody]object[] data)
@@ -128,6 +162,7 @@ namespace CodeGen.Web.Controllers
                 string webRootPath = _hostingEnvironment.WebRootPath; //From wwwroot
                 string contentRootPath = _hostingEnvironment.ContentRootPath; //From Others
 
+                //頁面上勾選的Table Columns資訊反序列化 (包括從DB取得的資訊內容)
                 var tblColumns = JsonConvert.DeserializeObject<List<vmColumn>>(data[0].ToString());
 
                 string fileContentSet = string.Empty; string fileContentGet = string.Empty;

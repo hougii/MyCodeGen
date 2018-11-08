@@ -44,6 +44,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             url: '/api/Codegen/GetDatabaseTableList',
             data: $scope.dbModel
         }).then(function successCallback(response) {
+            //response data的欄位名稱第一個字母會變小寫,why!?
             $scope.tblist = response.data;
         }, function errorCallback(response) {
             console.log(response);
@@ -69,6 +70,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         });
     };
 
+    //頁面上Keep欄位資訊
     $scope.getColumn = function (itm, status) {
         if (status) {
             var result = checkValue(itm.columnId, $scope.collist);
@@ -80,7 +82,8 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                     MaxLength: itm.maxLength,
                     IsNullable: itm.isNullable,
                     TableSchema: itm.tableSchema,
-                    Tablename: itm.tablename
+                    Tablename: itm.tablename,
+                    ColumnDescription: itm.columnDescription
                 });
             }
         }
@@ -91,6 +94,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         }
     };
 
+    //產生程式碼
     $scope.generate = function () {
         $('.nav-tabs a[href="#views"]').tab('show');
 

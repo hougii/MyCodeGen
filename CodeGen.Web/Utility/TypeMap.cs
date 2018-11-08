@@ -62,7 +62,8 @@ namespace CodeGen.Web.Utility
 
                 case "Int":
                 case "int":
-                    return "Int32";
+                    //return "Int32";
+                    return "int";
 
                 case "bigint":
                 case "BigInt":

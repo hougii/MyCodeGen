@@ -75,7 +75,7 @@
                     <div class="checkbox checkbox-success">
                         <input type="checkbox" id="checkAll">
                         <label for="checkAll">
-                            <strong>Check All</strong>
+                            <strong>Check All AAA</strong>
                         </label>
                     </div>
                 </div>
@@ -90,10 +90,12 @@
                                     <div class="checkbox checkbox-success">
                                         <input id="chkc_{{$index+1}}" type="checkbox" ng-click="getColumn(itm,checkbox_status)" ng-model="checkbox_status" ng-true-value="true" ng-false-value="false" name="coList[]" class="ctcolumn">
                                         <label for="chkc_{{$index+1}}" href="">
-                                            {{itm.columnName}}
+                                           {{itm.columnName}}
                                         </label>
                                     </div>
                                 </td>
+
+                                <td>{{itm.columnDescription}}</td>
                                 <td>{{itm.dataType}} <span ng-if="itm.maxLength>0">({{itm.maxLength}})</span></td>
                                 <td>{{itm.isNullable}}</td>
                             </tr>
