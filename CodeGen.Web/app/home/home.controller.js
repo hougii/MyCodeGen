@@ -65,6 +65,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             data: $scope.dbModel
         }).then(function successCallback(response) {
             $scope.colist = response.data;
+            
         }, function errorCallback(response) {
             console.log(response);
         });
