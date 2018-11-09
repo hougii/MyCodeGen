@@ -36,7 +36,7 @@ source code is copy from ：https://github.com/ShashangkaShekhar/Code-Generator
 
 ### Installing
 
-(TODO)
+see this page： [建置手冊.md](https://github.com/hougii/MyCodeGen/blob/master/%E5%BB%BA%E7%BD%AE%E6%89%8B%E5%86%8A.md)
 
 ## Running the tests
 
