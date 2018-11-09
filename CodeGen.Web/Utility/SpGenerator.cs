@@ -12,7 +12,7 @@ namespace CodeGen.Web.Utility
     public class SpGenerator
     {
         //CREATE
-        public static dynamic GenerateSetSP(List<vmColumn> tblColumns, string contentRootPath)
+        public static dynamic GenerateSetSP(List<ColumnInfo> tblColumns, string contentRootPath)
         {
             StringBuilder builderPrm = new StringBuilder();
             StringBuilder builderBody = new StringBuilder();
@@ -20,7 +20,7 @@ namespace CodeGen.Web.Utility
 
             string path = @"" + contentRootPath + "\\template\\StoredProcedure\\InsertSP.txt";
             string fileContent = string.Empty; string fileld = string.Empty; string fileldPrm = string.Empty; string queryPrm = string.Empty;
-            string tableName = tblColumns[0].Tablename; string tableSchema = tblColumns[0].TableSchema;
+            string tableName = tblColumns[0].TableName; string tableSchema = tblColumns[0].TableSchema;
 
             string spName = ("[" + tableSchema + "].[Set_" + tableName + "]").ToString();
             foreach (var item in tblColumns)
@@ -54,7 +54,7 @@ namespace CodeGen.Web.Utility
         }
 
         //READ
-        public static dynamic GenerateGetSP(List<vmColumn> tblColumns, string contentRootPath)
+        public static dynamic GenerateGetSP(List<ColumnInfo> tblColumns, string contentRootPath)
         {
             StringBuilder builderPrm = new StringBuilder();
             StringBuilder builderBody = new StringBuilder();
@@ -62,7 +62,7 @@ namespace CodeGen.Web.Utility
 
             string path = @"" + contentRootPath + "\\template\\StoredProcedure\\ReadSP.txt";
             string fileContent = string.Empty; string fileld = string.Empty; string fileldPrm = string.Empty; string queryPrm = string.Empty;
-            string tableName = tblColumns[0].Tablename; string tableSchema = tblColumns[0].TableSchema;
+            string tableName = tblColumns[0].TableName; string tableSchema = tblColumns[0].TableSchema;
 
             string spName = ("[" + tableSchema + "].[Get_" + tableName + "]").ToString();
             foreach (var item in tblColumns)
@@ -84,7 +84,7 @@ namespace CodeGen.Web.Utility
         }
 
         //UPDATE
-        public static dynamic GeneratePutSP(List<vmColumn> tblColumns, string contentRootPath)
+        public static dynamic GeneratePutSP(List<ColumnInfo> tblColumns, string contentRootPath)
         {
             StringBuilder builderPrm = new StringBuilder();
             StringBuilder builderBody = new StringBuilder();
@@ -92,7 +92,7 @@ namespace CodeGen.Web.Utility
 
             string path = @"" + contentRootPath + "\\template\\StoredProcedure\\UpdateSP.txt";
             string fileContent = string.Empty; string fileld = string.Empty; string fileldPrm = string.Empty; string queryPrm = string.Empty;
-            string tableName = tblColumns[0].Tablename; string tableSchema = tblColumns[0].TableSchema;
+            string tableName = tblColumns[0].TableName; string tableSchema = tblColumns[0].TableSchema;
 
             string spName = ("[" + tableSchema + "].[Get_" + tableName + "]").ToString();
             foreach (var item in tblColumns)
@@ -122,7 +122,7 @@ namespace CodeGen.Web.Utility
         }
 
         //DELETE
-        public static dynamic GenerateDeleteSP(List<vmColumn> tblColumns, string contentRootPath)
+        public static dynamic GenerateDeleteSP(List<ColumnInfo> tblColumns, string contentRootPath)
         {
             StringBuilder builderPrm = new StringBuilder();
             StringBuilder builderBody = new StringBuilder();
@@ -130,7 +130,7 @@ namespace CodeGen.Web.Utility
 
             string path = @"" + contentRootPath + "\\template\\StoredProcedure\\DeleteSP.txt";
             string fileContent = string.Empty; string fileld = string.Empty; string fileldPrm = string.Empty; string queryPrm = string.Empty;
-            string tableName = tblColumns[0].Tablename; string tableSchema = tblColumns[0].TableSchema;
+            string tableName = tblColumns[0].TableName; string tableSchema = tblColumns[0].TableSchema;
 
             string spName = ("[" + tableSchema + "].[Delete_" + tableName + "]").ToString();
             foreach (var item in tblColumns)

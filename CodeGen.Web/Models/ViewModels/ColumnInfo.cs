@@ -8,20 +8,22 @@ namespace CodeGen.Web.Models
     /// <summary>
     /// 資料表的欄位資訊
     /// </summary>
-    public class vmColumn
+    public class ColumnInfo
     {
         public int? ColumnId { get; set; }
         /// <summary>
-        /// 欄位名稱
+        /// (TW)欄位名稱
+        /// (EN)Column Name
         /// </summary>
         public string ColumnName { get; set; }
         public string DataType { get; set; }
         public string MaxLength { get; set; }
         public string IsNullable { get; set; }
         public string TableSchema { get; set; }
-        public string Tablename { get; set; }
+        public string TableName { get; set; }
         /// <summary>
-        /// 欄位備註
+        /// (TW)欄位備註
+        /// (EN)Column Description
         /// </summary>
         public string ColumnDescription { get; set; }
     }

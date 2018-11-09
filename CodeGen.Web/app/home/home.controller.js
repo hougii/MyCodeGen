@@ -133,7 +133,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                             document.getElementById(elementIDSql).innerHTML += "--+++++++++ DELETE SP +++++++++ \r\n" + rowGen[i] + "\r\n";
                         //VM
                         else if (i == 4)
-                            document.getElementById(elementIDVm).innerHTML += "// +++++++++ MODEL PROPERTIES +++++++++ \r\n" + rowGen[i] + "\r\n";
+                            document.getElementById(elementIDVm).innerHTML +=  rowGen[i] + "\r\n";
                         //VIEW
                         else if (i == 5)
                             document.getElementById(elementIDVu).innerHTML += "<!-- +++++++++ HTML FORM +++++++++ --> \r\n" + rowGen[i] + "\r\n";

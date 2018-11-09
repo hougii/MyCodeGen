@@ -61,9 +61,9 @@ namespace CodeGen.Web.Controllers
 
         // api/Codegen/GetDatabaseTableList
         [HttpPost, Route("GetDatabaseTableList"), Produces("application/json")]
-        public List<vmTable> GetDatabaseTableList([FromBody]vmParam model)
+        public List<TableInfo> GetDatabaseTableList([FromBody]vmParam model)
         {
-            List<vmTable> data = new List<vmTable>();
+            List<TableInfo> data = new List<TableInfo>();
             string conString_ = conString + " Database=" + model.DatabaseName + ";";
             using (SqlConnection con = new SqlConnection(conString_))
             {
@@ -72,7 +72,7 @@ namespace CodeGen.Web.Controllers
                 foreach (DataRow row in schema.Rows)
                 {
                     count++;
-                    data.Add(new vmTable()
+                    data.Add(new TableInfo()
                     {
                         TableId = count,
                         TableName = row[2].ToString()
@@ -91,9 +91,9 @@ namespace CodeGen.Web.Controllers
         /// <returns></returns>
         // api/Codegen/GetDatabaseTableColumnList
         [HttpPost, Route("GetDatabaseTableColumnList"), Produces("application/json")]
-        public List<vmColumn> GetDatabaseTableColumnList([FromBody]vmParam model)
+        public List<ColumnInfo> GetDatabaseTableColumnList([FromBody]vmParam model)
         {
-            List<vmColumn> data = new List<vmColumn>();
+            List<ColumnInfo> data = new List<ColumnInfo>();
             string conString_ = conString + " Database=" + model.DatabaseName + ";";
             using (SqlConnection con = new SqlConnection(conString_))
             {
@@ -127,14 +127,14 @@ namespace CodeGen.Web.Controllers
                         while (dr.Read())
                         {
                             count++;
-                            data.Add(new vmColumn()
+                            data.Add(new ColumnInfo()
                             {
                                 ColumnId = count,
                                 ColumnName = dr["Column"].ToString(),
                                 DataType = dr["ColumnType"].ToString(),
                                 MaxLength = dr["Length"].ToString(),
                                 IsNullable = dr["Nullable"].ToString(),
-                                Tablename = model.TableName.ToString(),
+                                TableName = model.TableName.ToString(),
                                 TableSchema = dr["Schema"].ToString(),
                                 ColumnDescription = dr["Description"].ToString()
                             });
@@ -162,8 +162,10 @@ namespace CodeGen.Web.Controllers
                 string webRootPath = _hostingEnvironment.WebRootPath; //From wwwroot
                 string contentRootPath = _hostingEnvironment.ContentRootPath; //From Others
 
+                //TODO:
+                var dbTable = new TableInfo();
                 //頁面上勾選的Table Columns資訊反序列化 (包括從DB取得的資訊內容)
-                var tblColumns = JsonConvert.DeserializeObject<List<vmColumn>>(data[0].ToString());
+                var dbColumns = JsonConvert.DeserializeObject<List<ColumnInfo>>(data[0].ToString());
 
                 string fileContentSet = string.Empty; string fileContentGet = string.Empty;
                 string fileContentPut = string.Empty; string fileContentDelete = string.Empty;
@@ -172,29 +174,29 @@ namespace CodeGen.Web.Controllers
                 string fileContentAPIGetById = string.Empty;
 
                 //SP
-                fileContentSet = SpGenerator.GenerateSetSP(tblColumns, webRootPath);
-                fileContentGet = SpGenerator.GenerateGetSP(tblColumns, webRootPath);
-                fileContentPut = SpGenerator.GeneratePutSP(tblColumns, webRootPath);
-                fileContentDelete = SpGenerator.GenerateDeleteSP(tblColumns, webRootPath);
+                fileContentSet = SpGenerator.GenerateSetSP(dbColumns, webRootPath);
+                fileContentGet = SpGenerator.GenerateGetSP(dbColumns, webRootPath);
+                fileContentPut = SpGenerator.GeneratePutSP(dbColumns, webRootPath);
+                fileContentDelete = SpGenerator.GenerateDeleteSP(dbColumns, webRootPath);
                 spCollection.Add(fileContentSet);
                 spCollection.Add(fileContentGet);
                 spCollection.Add(fileContentPut);
                 spCollection.Add(fileContentDelete);
 
                 //VM
-                fileContentVm = VmGenerator.GenerateVm(tblColumns, webRootPath);
+                fileContentVm = ModelGenerator.GenerateModel(dbTable,dbColumns, webRootPath);
                 spCollection.Add(fileContentVm);
 
                 //VU
-                fileContentView = ViewGenerator.GenerateForm(tblColumns, webRootPath);
+                fileContentView = ViewGenerator.GenerateForm(dbColumns, webRootPath);
                 spCollection.Add(fileContentView);
 
                 //NG
-                fileContentNg = NgGenerator.GenerateNgController(tblColumns, webRootPath);
+                fileContentNg = NgGenerator.GenerateNgController(dbColumns, webRootPath);
                 spCollection.Add(fileContentNg);
 
                 //API
-                fileContentAPIGet = APIGenerator.GenerateAPIGet(tblColumns, webRootPath);
+                fileContentAPIGet = APIGenerator.GenerateAPIGet(dbColumns, webRootPath);
                 spCollection.Add(fileContentAPIGet);
             }
             catch (Exception ex)

@@ -11,7 +11,7 @@ namespace CodeGen.Web.Utility
 {
     public class ViewGenerator
     {
-        public static dynamic GenerateForm(List<vmColumn> tblColumns, string contentRootPath)
+        public static dynamic GenerateForm(List<ColumnInfo> tblColumns, string contentRootPath)
         {
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             StringBuilder builderPrm = new StringBuilder();
@@ -19,7 +19,7 @@ namespace CodeGen.Web.Utility
             builderPrm.Clear(); builderSub.Clear();
             string fileContent = string.Empty; string queryPrm = string.Empty; string submitPrm = string.Empty;
 
-            string tableName = tblColumns[0].Tablename; string tableSchema = tblColumns[0].TableSchema;
+            string tableName = tblColumns[0].TableName; string tableSchema = tblColumns[0].TableSchema;
             string path = @"" + contentRootPath + "\\template\\HtmlForm\\Form.txt";
 
             //Form Name
