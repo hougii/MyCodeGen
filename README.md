@@ -1,5 +1,5 @@
 # MyCodeGen - 程式碼產生工具
-source code is copy from ：https://github.com/ShashangkaShekhar/Code-Generator
+Init source code is copy from ：https://github.com/ShashangkaShekhar/Code-Generator
 
 (TW)我額外增加需求，並修正其程式碼架構。
 
