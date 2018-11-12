@@ -13,10 +13,11 @@ source code is copy from ：https://github.com/ShashangkaShekhar/Code-Generator
 
 ![1541754879856](README.assets/1541754879856.png)
 
-* 
-* (TW)Table欄位資訊額外取得-Description資料  (2018/11/09 add)
-* (TW)Model產生樣式的架構，改寫使用DotLiquid的樣版處理  (2018/11/09 add)
-* 
+(上至下，由舊到新)
+
+* :ballot_box_with_check: (TW)Table欄位資訊額外取得-Description資料  (2018/11/09 add)
+* :ballot_box_with_check: (TW)Model產生樣式的架構，改寫使用DotLiquid的樣版處理  (2018/11/09 add)
+* :ballot_box_with_check: (TW)取得Table的描述資訊，並傳至CodeGenerate中使用(2018/11/12)
 
 
 

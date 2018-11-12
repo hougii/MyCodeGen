@@ -2,6 +2,7 @@
 templatingApp.controller('HomeController', ['$scope', '$http', function ($scope, $http) {
 
     $scope.dbId = 0; $scope.dbname = null;
+    $scope.tableInfo = null;
     $scope.collist = []; $scope.isCheckAll = 0;
 
 
@@ -44,19 +45,22 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             url: '/api/Codegen/GetDatabaseTableList',
             data: $scope.dbModel
         }).then(function successCallback(response) {
-            //response data的欄位名稱第一個字母會變小寫,why!?
+            //(TW)取得Table清單
+            //(EN)get table list
+            //(TW)註：response data的欄位名稱第一個字母會變小寫, why! ?
             $scope.tblist = response.data;
         }, function errorCallback(response) {
             console.log(response);
         });
     };
 
-    $scope.getAllTableColumn = function (itm) {
+    $scope.getAllTableColumn = function (table) {
+        
         $scope.dbModel = {
             DatabaseId: $scope.dbId,
             DatabaseName: $scope.dbname,
-            TableId: itm.tableId,
-            TableName: itm.tableName
+            TableId: table.tableId,
+            TableName: table.tableName
         };
 
         $http({
@@ -64,6 +68,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             url: '/api/Codegen/GetDatabaseTableColumnList',
             data: $scope.dbModel
         }).then(function successCallback(response) {
+            $scope.tableInfo = table;
             $scope.colist = response.data;
             
         }, function errorCallback(response) {
@@ -107,12 +112,11 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         var elementIDApi = 'genCodeAPI';
 
         if ($scope.collist.length > 0) {
-            var models = "[" + JSON.stringify($scope.collist) + "]";
-
+            //20181112-howard-change post data content.
             $http({
                 method: 'POST',
                 url: '/api/Codegen/GenerateCode',
-                data: models,
+                data: {table:$scope.tableInfo,columns:$scope.collist},
                 dataType: "json",
                 contentType: 'application/json; charset=utf-8'
             }).then(function (response) {

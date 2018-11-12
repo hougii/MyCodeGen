@@ -17,8 +17,8 @@ namespace CodeGen.Web.Models
         /// </summary>
         public string ColumnName { get; set; }
         public string DataType { get; set; }
-        public string MaxLength { get; set; }
-        public string IsNullable { get; set; }
+        public int MaxLength { get; set; }
+        public bool IsNullable { get; set; }
         public string TableSchema { get; set; }
         public string TableName { get; set; }
         /// <summary>

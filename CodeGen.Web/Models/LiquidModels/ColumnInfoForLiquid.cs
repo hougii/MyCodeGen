@@ -23,7 +23,7 @@ namespace CodeGen.Web.Models
             base.DataType = column.DataType;
             base.IsNullable = column.IsNullable;
             base.MaxLength = column.MaxLength;
-            ModelType = convertDataTypeToModelType(base.DataType);
+            ModelType = convertDataTypeToModelType(base.DataType, base.IsNullable);
         }
 
         /// <summary>
@@ -54,9 +54,10 @@ namespace CodeGen.Web.Models
         /// <summary>
         /// (TW)將資料庫的型別轉換為物件型別
         /// </summary>
-        /// <param name="dataType">資料庫型別</param>
+        /// <remarks>(TW)因僅於Column時會應用到，暫先此Function之放於此Model之下</remarks>
+        /// <param name="dataType">(TW)資料庫型別</param>
         /// <returns></returns>
-        private string convertDataTypeToModelType(string dataType)
+        private string convertDataTypeToModelType(string dataType, bool isNullable)
         {
             var result = "";
             //(TW)轉換為小寫
@@ -64,19 +65,19 @@ namespace CodeGen.Web.Models
             switch (dataType)
             {
                 case "bit":
-                    result = "bool";
+                    result = (isNullable) ? "bool?" : "bool";
                     break;
                 case string s when (s.Contains("int")):
-                    result = "int";
+                    result = (isNullable) ? "int?":"int";
                     break;
                 case "decimal":
                 case "money":
                 case "float":
-                    result = "decimal";
+                    result = (isNullable) ? "decimal?":"decimal";
                     break;
 
                 case string s when (s.Contains("time")):
-                    result = "DateTime";
+                    result = (isNullable) ? "DateTime?":"DateTime";
                     break;
                 default:
                     result = "string";

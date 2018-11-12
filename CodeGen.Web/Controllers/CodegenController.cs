@@ -28,10 +28,10 @@ namespace CodeGen.Web.Controllers
         private readonly string _conString = "";//"server=DESKTOP-80DEJMQ; uid=sa; pwd=sa@12345;";
 
         public CodegenController(
-            IHostingEnvironment hostingEnvironment, 
+            IHostingEnvironment hostingEnvironment,
             IConfiguration config)
         {
-            
+
             _hostingEnvironment = hostingEnvironment;
             _conString = ConfigurationExtensions.GetConnectionString(config, "Default");
         }
@@ -72,8 +72,32 @@ namespace CodeGen.Web.Controllers
             string conString_ = _conString + " Database=" + model.DatabaseName + ";";
             using (SqlConnection con = new SqlConnection(conString_))
             {
-                int count = 0; con.Open();
-                DataTable schema = con.GetSchema("Tables");
+                int count = 0;
+                con.Open();
+                var sql = @"
+            select st.TABLE_NAME as TableName,ep.value as [Description] 
+                from INFORMATION_SCHEMA.TABLES st
+                OUTER APPLY fn_listextendedproperty(default,
+                                    'SCHEMA', TABLE_SCHEMA,
+                                    'TABLE', TABLE_NAME, null, null) ep
+            where st.TABLE_TYPE='BASE TABLE'";
+
+                using (SqlCommand cmd = new SqlCommand(sql, con)) {
+                    using (IDataReader reader = cmd.ExecuteReader()) {
+                        while (reader.Read()) {
+                            ++count;
+                            data.Add(new TableInfo
+                            {
+                                TableId = count,
+                                TableName = Convert.ToString(reader["TableName"]),
+                                TableDescription = Convert.ToString(reader["Description"])
+                            });
+                        }
+                    }
+                }
+
+#if false //old code
+                DataTable schema = con.GetSchema("Tables");//(TW)原程式:資訊太少
                 foreach (DataRow row in schema.Rows)
                 {
                     count++;
@@ -83,6 +107,7 @@ namespace CodeGen.Web.Controllers
                         TableName = row[2].ToString()
                     });
                 }
+#endif
             }
 
             return data.ToList();
@@ -112,7 +137,7 @@ namespace CodeGen.Web.Controllers
 	        sep.value as [Description],
 		info.DATA_TYPE as [ColumnType],
 		ISNULL(info.CHARACTER_MAXIMUM_LENGTH,0) as [Length], 
-		info.IS_NULLABLE as [Nullable],
+		info.IS_NULLABLE as [Nullable], --get[YES/NO]word.
 		info.TABLE_SCHEMA as [Schema]
     from sys.tables st  --此資料庫下的Table
     inner join sys.columns sc on st.object_id = sc.object_id
@@ -137,8 +162,8 @@ namespace CodeGen.Web.Controllers
                                 ColumnId = count,
                                 ColumnName = dr["Column"].ToString(),
                                 DataType = dr["ColumnType"].ToString(),
-                                MaxLength = dr["Length"].ToString(),
-                                IsNullable = dr["Nullable"].ToString(),
+                                MaxLength = Convert.ToInt32(dr["Length"].ToString()),
+                                IsNullable = (dr["Nullable"].ToString() == "YES") ? true : false,
                                 TableName = model.TableName.ToString(),
                                 TableSchema = dr["Schema"].ToString(),
                                 ColumnDescription = dr["Description"].ToString()
@@ -149,19 +174,19 @@ namespace CodeGen.Web.Controllers
             }
             return data.ToList();
         }
-        #endregion
+#endregion
 
 
 
-        #region +++++ CodeGeneration +++++
+#region +++++ CodeGeneration +++++
         /// <summary>
-        /// 執行產生Code的觸發點
+        /// (TW)執行產生Code的觸發點
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
         // api/Codegen/GenerateCode
         [HttpPost, Route("GenerateCode"), Produces("application/json")]
-        public IActionResult GenerateCode([FromBody]object[] data)
+        public IActionResult GenerateCode([FromBody]object data)
         {
             List<string> spCollection = new List<string>();
             try
@@ -169,10 +194,14 @@ namespace CodeGen.Web.Controllers
                 string webRootPath = _hostingEnvironment.WebRootPath; //From wwwroot
                 string contentRootPath = _hostingEnvironment.ContentRootPath; //From Others
 
+                var postData = JsonConvert.DeserializeObject<dynamic>(data.ToString());
+                var tableJson = postData.table;
+                var columnsJson = postData.columns;
+
                 //TODO:
-                var dbTable = new TableInfo();
-                //頁面上勾選的Table Columns資訊反序列化 (包括從DB取得的資訊內容)
-                var dbColumns = JsonConvert.DeserializeObject<List<ColumnInfo>>(data[0].ToString());
+                var dbTable = JsonConvert.DeserializeObject<TableInfo>(tableJson.ToString());
+                //(TW)頁面上勾選的Table Columns資訊反序列化 (包括從DB取得的資訊內容)
+                var dbColumns = JsonConvert.DeserializeObject<List<ColumnInfo>>(columnsJson.ToString());
 
                 string fileContentSet = string.Empty; string fileContentGet = string.Empty;
                 string fileContentPut = string.Empty; string fileContentDelete = string.Empty;
@@ -191,7 +220,7 @@ namespace CodeGen.Web.Controllers
                 spCollection.Add(fileContentDelete);
 
                 //VM
-                fileContentVm = ModelGenerator.GenerateModel(dbTable,dbColumns, webRootPath);
+                fileContentVm = ModelGenerator.GenerateModel(dbTable, dbColumns, webRootPath);
                 spCollection.Add(fileContentVm);
 
                 //VU
@@ -217,6 +246,6 @@ namespace CodeGen.Web.Controllers
             });
         }
 
-        #endregion
+#endregion
     }
 }
