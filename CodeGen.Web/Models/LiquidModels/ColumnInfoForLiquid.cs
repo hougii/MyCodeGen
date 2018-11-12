@@ -21,8 +21,16 @@ namespace CodeGen.Web.Models
             base.ColumnName = column.ColumnName;
             base.ColumnDescription = column.ColumnDescription;
             base.DataType = column.DataType;
+            base.IsNullable = column.IsNullable;
             base.MaxLength = column.MaxLength;
+            ModelType = convertDataTypeToModelType(base.DataType);
         }
+
+        /// <summary>
+        /// (TW)轉換後的物件型別
+        /// </summary>
+        public string ModelType { get; set; }
+
 
         /// <summary>
         /// (TW)實作於Liquid下可用的參數
@@ -37,8 +45,44 @@ namespace CodeGen.Web.Models
                 ColumnName,
                 ColumnDescription,
                 DataType,
+                ModelType,
                 MaxLength,
             };
+        }
+
+
+        /// <summary>
+        /// (TW)將資料庫的型別轉換為物件型別
+        /// </summary>
+        /// <param name="dataType">資料庫型別</param>
+        /// <returns></returns>
+        private string convertDataTypeToModelType(string dataType)
+        {
+            var result = "";
+            //(TW)轉換為小寫
+            dataType = dataType.ToLower();
+            switch (dataType)
+            {
+                case "bit":
+                    result = "bool";
+                    break;
+                case string s when (s.Contains("int")):
+                    result = "int";
+                    break;
+                case "decimal":
+                case "money":
+                case "float":
+                    result = "decimal";
+                    break;
+
+                case string s when (s.Contains("time")):
+                    result = "DateTime";
+                    break;
+                default:
+                    result = "string";
+                    break;
+            }
+            return result;
         }
     }
 }

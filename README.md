@@ -9,7 +9,7 @@ source code is copy from ：https://github.com/ShashangkaShekhar/Code-Generator
 
 
 
-## 現階段修正的網站功能：
+## 現階段額外增加的網站功能：
 
 ![1541754879856](README.assets/1541754879856.png)
 
@@ -71,4 +71,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-- thanks  ShashangkaShekhar ,code init Auther,  i use your source code to append my requirement.
+- thanks  ShashangkaShekhar ,code init Auther,  i use your source code and append my requirement.

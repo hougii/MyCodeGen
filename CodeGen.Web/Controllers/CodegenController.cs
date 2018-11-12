@@ -15,6 +15,7 @@ using CodeGen.Web.Models;
 using CodeGen.Web.Utility;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.Extensions.Configuration;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,11 +25,15 @@ namespace CodeGen.Web.Controllers
     public class CodegenController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;
-        private string conString = "Data Source=localhost;Integrated Security=True;";//"server=DESKTOP-80DEJMQ; uid=sa; pwd=sa@12345;";
+        private readonly string _conString = "";//"server=DESKTOP-80DEJMQ; uid=sa; pwd=sa@12345;";
 
-        public CodegenController(IHostingEnvironment hostingEnvironment)
+        public CodegenController(
+            IHostingEnvironment hostingEnvironment, 
+            IConfiguration config)
         {
+            
             _hostingEnvironment = hostingEnvironment;
+            _conString = ConfigurationExtensions.GetConnectionString(config, "Default");
         }
 
         #region ++++++ Database +++++++
@@ -37,7 +42,7 @@ namespace CodeGen.Web.Controllers
         public List<vmDatabase> GetDatabaseList()
         {
             List<vmDatabase> data = new List<vmDatabase>();
-            using (SqlConnection con = new SqlConnection(conString))
+            using (SqlConnection con = new SqlConnection(_conString))
             {
                 int count = 0; con.Open();
                 using (SqlCommand cmd = new SqlCommand("SELECT name from sys.databases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb') ORDER BY create_date", con))
@@ -64,7 +69,7 @@ namespace CodeGen.Web.Controllers
         public List<TableInfo> GetDatabaseTableList([FromBody]vmParam model)
         {
             List<TableInfo> data = new List<TableInfo>();
-            string conString_ = conString + " Database=" + model.DatabaseName + ";";
+            string conString_ = _conString + " Database=" + model.DatabaseName + ";";
             using (SqlConnection con = new SqlConnection(conString_))
             {
                 int count = 0; con.Open();
@@ -94,7 +99,7 @@ namespace CodeGen.Web.Controllers
         public List<ColumnInfo> GetDatabaseTableColumnList([FromBody]vmParam model)
         {
             List<ColumnInfo> data = new List<ColumnInfo>();
-            string conString_ = conString + " Database=" + model.DatabaseName + ";";
+            string conString_ = _conString + " Database=" + model.DatabaseName + ";";
             using (SqlConnection con = new SqlConnection(conString_))
             {
                 int count = 0; con.Open();
@@ -145,6 +150,8 @@ namespace CodeGen.Web.Controllers
             return data.ToList();
         }
         #endregion
+
+
 
         #region +++++ CodeGeneration +++++
         /// <summary>
