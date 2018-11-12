@@ -11,8 +11,15 @@ namespace CodeGen.Web.Utility
 {
     public class SpGenerator
     {
-        //CREATE
-        public static dynamic GenerateSetSP(List<ColumnInfo> tblColumns, string contentRootPath)
+        /// <summary>
+        /// (TW)產生SP的Create的程式碼
+        /// (EN)generate SP Create source code
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="columns"></param>
+        /// <param name="contentRootPath"></param>
+        /// <returns></returns>
+        public static dynamic GenerateSetSP(TableInfo table, List<ColumnInfo> columns, string contentRootPath)
         {
             StringBuilder builderPrm = new StringBuilder();
             StringBuilder builderBody = new StringBuilder();
@@ -20,10 +27,12 @@ namespace CodeGen.Web.Utility
 
             string path = @"" + contentRootPath + "\\template\\StoredProcedure\\InsertSP.txt";
             string fileContent = string.Empty; string fileld = string.Empty; string fileldPrm = string.Empty; string queryPrm = string.Empty;
-            string tableName = tblColumns[0].TableName; string tableSchema = tblColumns[0].TableSchema;
+            string tableName = table.TableName;
+            string tableSchema = table.TableSchema;
+            string tableDescription = table.TableDescription;
 
             string spName = ("[" + tableSchema + "].[Set_" + tableName + "]").ToString();
-            foreach (var item in tblColumns)
+            foreach (var item in columns)
             {
                 fileld = fileld + item.ColumnName + ",";
                 fileldPrm = fileldPrm + "@" + item.ColumnName + ",";
@@ -53,8 +62,15 @@ namespace CodeGen.Web.Utility
             return fileContent.ToString();
         }
 
-        //READ
-        public static dynamic GenerateGetSP(List<ColumnInfo> tblColumns, string contentRootPath)
+        /// <summary>
+        /// (TW)產生SP的Read的程式碼
+        /// (EN)generate SP Read source code
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="columns"></param>
+        /// <param name="contentRootPath"></param>
+        /// <returns></returns>
+        public static dynamic GenerateGetSP(TableInfo table, List<ColumnInfo> columns, string contentRootPath)
         {
             StringBuilder builderPrm = new StringBuilder();
             StringBuilder builderBody = new StringBuilder();
@@ -62,10 +78,12 @@ namespace CodeGen.Web.Utility
 
             string path = @"" + contentRootPath + "\\template\\StoredProcedure\\ReadSP.txt";
             string fileContent = string.Empty; string fileld = string.Empty; string fileldPrm = string.Empty; string queryPrm = string.Empty;
-            string tableName = tblColumns[0].TableName; string tableSchema = tblColumns[0].TableSchema;
+            string tableName = table.TableName;
+            string tableSchema = table.TableSchema;
+            string tableDescription = table.TableDescription;
 
             string spName = ("[" + tableSchema + "].[Get_" + tableName + "]").ToString();
-            foreach (var item in tblColumns)
+            foreach (var item in columns)
             {
                 fileld = fileld + item.ColumnName + ",";
                 fileldPrm = fileldPrm + "@" + item.ColumnName + ",";
@@ -83,8 +101,15 @@ namespace CodeGen.Web.Utility
             return fileContent.ToString();
         }
 
-        //UPDATE
-        public static dynamic GeneratePutSP(List<ColumnInfo> tblColumns, string contentRootPath)
+        /// <summary>
+        /// (TW)產生SP的Update的程式碼
+        /// (EN)generate SP Update source code
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="columns"></param>
+        /// <param name="contentRootPath"></param>
+        /// <returns></returns>
+        public static dynamic GeneratePutSP(TableInfo table, List<ColumnInfo> columns, string contentRootPath)
         {
             StringBuilder builderPrm = new StringBuilder();
             StringBuilder builderBody = new StringBuilder();
@@ -92,10 +117,12 @@ namespace CodeGen.Web.Utility
 
             string path = @"" + contentRootPath + "\\template\\StoredProcedure\\UpdateSP.txt";
             string fileContent = string.Empty; string fileld = string.Empty; string fileldPrm = string.Empty; string queryPrm = string.Empty;
-            string tableName = tblColumns[0].TableName; string tableSchema = tblColumns[0].TableSchema;
+            string tableName = table.TableName;
+            string tableSchema = table.TableSchema;
+            string tableDescription = table.TableDescription;
 
             string spName = ("[" + tableSchema + "].[Get_" + tableName + "]").ToString();
-            foreach (var item in tblColumns)
+            foreach (var item in columns)
             {
                 fileld = fileld + item.ColumnName + ",";
                 fileldPrm = fileldPrm + item.ColumnName + " = @" + item.ColumnName + ",";
@@ -121,8 +148,15 @@ namespace CodeGen.Web.Utility
             return fileContent.ToString();
         }
 
-        //DELETE
-        public static dynamic GenerateDeleteSP(List<ColumnInfo> tblColumns, string contentRootPath)
+        /// <summary>
+        /// (TW)產生SP的Delete的程式碼
+        /// (EN)generate SP Delete source code
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="columns"></param>
+        /// <param name="contentRootPath"></param>
+        /// <returns></returns>
+        public static dynamic GenerateDeleteSP(TableInfo table, List<ColumnInfo> columns, string contentRootPath)
         {
             StringBuilder builderPrm = new StringBuilder();
             StringBuilder builderBody = new StringBuilder();
@@ -130,10 +164,12 @@ namespace CodeGen.Web.Utility
 
             string path = @"" + contentRootPath + "\\template\\StoredProcedure\\DeleteSP.txt";
             string fileContent = string.Empty; string fileld = string.Empty; string fileldPrm = string.Empty; string queryPrm = string.Empty;
-            string tableName = tblColumns[0].TableName; string tableSchema = tblColumns[0].TableSchema;
+            string tableName = table.TableName;
+            string tableSchema = table.TableSchema;
+            string tableDescription = table.TableDescription;
 
             string spName = ("[" + tableSchema + "].[Delete_" + tableName + "]").ToString();
-            foreach (var item in tblColumns)
+            foreach (var item in columns)
             {
                 fileld = fileld + item.ColumnName + ",";
                 fileldPrm = fileldPrm + "@" + item.ColumnName + ",";

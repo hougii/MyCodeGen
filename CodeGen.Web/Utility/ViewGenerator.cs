@@ -11,7 +11,15 @@ namespace CodeGen.Web.Utility
 {
     public class ViewGenerator
     {
-        public static dynamic GenerateForm(List<ColumnInfo> tblColumns, string contentRootPath)
+        /// <summary>
+        /// (TW)產生View的程式碼
+        /// (EN)generate View Data 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="columns"></param>
+        /// <param name="contentRootPath"></param>
+        /// <returns></returns>
+        public static dynamic GenerateForm(TableInfo table, List<ColumnInfo> columns, string contentRootPath)
         {
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             StringBuilder builderPrm = new StringBuilder();
@@ -19,14 +27,15 @@ namespace CodeGen.Web.Utility
             builderPrm.Clear(); builderSub.Clear();
             string fileContent = string.Empty; string queryPrm = string.Empty; string submitPrm = string.Empty;
 
-            string tableName = tblColumns[0].TableName; string tableSchema = tblColumns[0].TableSchema;
+            string tableName = table.TableName;
+            string tableDescription = table.TableDescription;
             string path = @"" + contentRootPath + "\\template\\HtmlForm\\Form.txt";
 
             //Form Name
             string frmName = "name='frm" + tableName.ToString() + "' novalidate";
 
             //Form Fields
-            foreach (var item in tblColumns)
+            foreach (var item in columns)
             {
                 //parameter
                 builderPrm.AppendLine();

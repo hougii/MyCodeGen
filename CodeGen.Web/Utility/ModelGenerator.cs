@@ -15,7 +15,6 @@ namespace CodeGen.Web.Utility
         /// <summary>
         /// (TW)產生DbModel的程式碼
         /// (EN)generate Database Class Model 
-        /// 
         /// </summary>
         /// <param name="table"></param>
         /// <param name="columns"></param>

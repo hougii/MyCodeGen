@@ -15,6 +15,10 @@ namespace CodeGen.Web.Models
         /// </summary>
         public int TableId { get; set; }
         /// <summary>
+        /// Table Schema
+        /// </summary>
+        public string TableSchema { get; set; }
+        /// <summary>
         /// Table Name
         /// </summary>
         public string TableName { get; set; }

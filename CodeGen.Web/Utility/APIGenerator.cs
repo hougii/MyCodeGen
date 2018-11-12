@@ -11,7 +11,15 @@ namespace CodeGen.Web.Utility
 {
     public class APIGenerator
     {
-        public static dynamic GenerateAPIGet(List<ColumnInfo> tblColumns, string contentRootPath)
+        /// <summary>
+        /// (TW)產生API的程式碼
+        /// (EN)generate API source code
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="columns"></param>
+        /// <param name="contentRootPath"></param>
+        /// <returns></returns>
+        public static dynamic GenerateAPIGet(TableInfo table, List<ColumnInfo> columns, string contentRootPath)
         {
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             StringBuilder builderPrm = new StringBuilder();
@@ -19,7 +27,8 @@ namespace CodeGen.Web.Utility
             builderPrm.Clear(); builderSub.Clear();
             string fileContent = string.Empty; string queryPrm = string.Empty; string submitPrm = string.Empty;
 
-            string tableName = tblColumns[0].TableName; string tableSchema = tblColumns[0].TableSchema;
+            string tableName = table.TableName;
+            string tableDescription = table.TableDescription;
             string path = @"" + contentRootPath + "\\template\\WebAPI\\APIController.txt";
 
             //Api Controller
@@ -36,7 +45,7 @@ namespace CodeGen.Web.Utility
             string urlApiDeleteByID = "api/" + textInfo.ToTitleCase(Conversion.RemoveSpecialCharacters(tableName.ToString())) + "/DeleteByID/5";
 
             //Enity Fields
-            foreach (var item in tblColumns)
+            foreach (var item in columns)
             {
                 //parameter
                 builderPrm.AppendLine();

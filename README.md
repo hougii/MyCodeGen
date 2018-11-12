@@ -1,5 +1,5 @@
 # MyCodeGen - 程式碼產生工具
-Init source code is copy from ：https://github.com/ShashangkaShekhar/Code-Generator
+source code is copy from ：https://github.com/ShashangkaShekhar/Code-Generator
 
 (TW)我額外增加需求，並修正其程式碼架構。
 
@@ -18,6 +18,8 @@ Init source code is copy from ：https://github.com/ShashangkaShekhar/Code-Gener
 * :ballot_box_with_check: (TW)Table欄位資訊額外取得-Description資料  (2018/11/09 add)
 * :ballot_box_with_check: (TW)Model產生樣式的架構，改寫使用DotLiquid的樣版處理  (2018/11/09 add)
 * :ballot_box_with_check: (TW)取得Table的描述資訊，並傳至CodeGenerate中使用(2018/11/12)
+* :ballot_box_with_check: (TW)Generate 後的Response Data改為Dictionary的Json資料以便於判斷及維護(2018/11/12)
+* :ballot_box_with_check: (TW)各類型的資料Generate，皆一致傳入dbTable及dbColumns的資訊(2018/11/12)
 
 
 

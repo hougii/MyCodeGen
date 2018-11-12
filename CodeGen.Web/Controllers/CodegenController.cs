@@ -75,20 +75,24 @@ namespace CodeGen.Web.Controllers
                 int count = 0;
                 con.Open();
                 var sql = @"
-            select st.TABLE_NAME as TableName,ep.value as [Description] 
+            select st.TABLE_SCHEMA as TableSchema,st.TABLE_NAME as TableName,ep.value as [Description] 
                 from INFORMATION_SCHEMA.TABLES st
                 OUTER APPLY fn_listextendedproperty(default,
                                     'SCHEMA', TABLE_SCHEMA,
                                     'TABLE', TABLE_NAME, null, null) ep
             where st.TABLE_TYPE='BASE TABLE'";
 
-                using (SqlCommand cmd = new SqlCommand(sql, con)) {
-                    using (IDataReader reader = cmd.ExecuteReader()) {
-                        while (reader.Read()) {
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    using (IDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
                             ++count;
                             data.Add(new TableInfo
                             {
                                 TableId = count,
+                                TableSchema = Convert.ToString(reader["TableSchema"]),
                                 TableName = Convert.ToString(reader["TableName"]),
                                 TableDescription = Convert.ToString(reader["Description"])
                             });
@@ -174,11 +178,11 @@ namespace CodeGen.Web.Controllers
             }
             return data.ToList();
         }
-#endregion
+        #endregion
 
 
 
-#region +++++ CodeGeneration +++++
+        #region +++++ CodeGeneration +++++
         /// <summary>
         /// (TW)執行產生Code的觸發點
         /// </summary>
@@ -188,7 +192,7 @@ namespace CodeGen.Web.Controllers
         [HttpPost, Route("GenerateCode"), Produces("application/json")]
         public IActionResult GenerateCode([FromBody]object data)
         {
-            List<string> spCollection = new List<string>();
+            Dictionary<string, string> resultCollectionDic = new Dictionary<string, string>();
             try
             {
                 string webRootPath = _hostingEnvironment.WebRootPath; //From wwwroot
@@ -205,47 +209,44 @@ namespace CodeGen.Web.Controllers
 
                 string fileContentSet = string.Empty; string fileContentGet = string.Empty;
                 string fileContentPut = string.Empty; string fileContentDelete = string.Empty;
-                string fileContentVm = string.Empty; string fileContentView = string.Empty;
+                string fileContentDbModel = string.Empty; string fileContentView = string.Empty;
                 string fileContentNg = string.Empty; string fileContentAPIGet = string.Empty;
                 string fileContentAPIGetById = string.Empty;
 
                 //SP
-                fileContentSet = SpGenerator.GenerateSetSP(dbColumns, webRootPath);
-                fileContentGet = SpGenerator.GenerateGetSP(dbColumns, webRootPath);
-                fileContentPut = SpGenerator.GeneratePutSP(dbColumns, webRootPath);
-                fileContentDelete = SpGenerator.GenerateDeleteSP(dbColumns, webRootPath);
-                spCollection.Add(fileContentSet);
-                spCollection.Add(fileContentGet);
-                spCollection.Add(fileContentPut);
-                spCollection.Add(fileContentDelete);
+                fileContentSet = SpGenerator.GenerateSetSP(dbTable, dbColumns, webRootPath);
+                fileContentGet = SpGenerator.GenerateGetSP(dbTable, dbColumns, webRootPath);
+                fileContentPut = SpGenerator.GeneratePutSP(dbTable, dbColumns, webRootPath);
+                fileContentDelete = SpGenerator.GenerateDeleteSP(dbTable, dbColumns, webRootPath);
+                resultCollectionDic.Add("SPSet", fileContentSet);
+                resultCollectionDic.Add("SPGet",fileContentGet);
+                resultCollectionDic.Add("SPPut", fileContentPut);
+                resultCollectionDic.Add("SPDelete", fileContentDelete);
 
-                //VM
-                fileContentVm = ModelGenerator.GenerateModel(dbTable, dbColumns, webRootPath);
-                spCollection.Add(fileContentVm);
+                //DbModel
+                fileContentDbModel = ModelGenerator.GenerateModel(dbTable, dbColumns, webRootPath);
+                resultCollectionDic.Add("DbModel", fileContentDbModel);
 
-                //VU
-                fileContentView = ViewGenerator.GenerateForm(dbColumns, webRootPath);
-                spCollection.Add(fileContentView);
+                //View
+                fileContentView = ViewGenerator.GenerateForm(dbTable,dbColumns, webRootPath);
+                resultCollectionDic.Add("View", fileContentView);
 
                 //NG
-                fileContentNg = NgGenerator.GenerateNgController(dbColumns, webRootPath);
-                spCollection.Add(fileContentNg);
+                fileContentNg = NgGenerator.GenerateNgController(dbTable, dbColumns, webRootPath);
+                resultCollectionDic.Add("NG", fileContentNg);
 
                 //API
-                fileContentAPIGet = APIGenerator.GenerateAPIGet(dbColumns, webRootPath);
-                spCollection.Add(fileContentAPIGet);
+                fileContentAPIGet = APIGenerator.GenerateAPIGet(dbTable, dbColumns, webRootPath);
+                resultCollectionDic.Add("APIGet", fileContentAPIGet);
             }
             catch (Exception ex)
             {
                 ex.ToString();
             }
 
-            return Json(new
-            {
-                spCollection
-            });
+            return Json(resultCollectionDic);
         }
 
-#endregion
+        #endregion
     }
 }
