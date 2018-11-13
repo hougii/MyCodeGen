@@ -1,0 +1,78 @@
+﻿app.controller('{{table.TableName}}Controller', ['$scope', '$http', function ($scope, $http) {
+    $scope.vmModel = {};
+
+    //******=========Get All=========******
+    GetAll();
+	function GetAll() {
+		$http({
+			method: 'GET',
+			url: '/api/{{table.TableName}}/GetAll'
+		}).then(function (response) {
+		   console.log(response.data);
+		}, function (response) {
+		   console.log(response);
+		});
+	};
+
+	//******=========Get Single=========******
+	$scope.GetById = function (model) {
+		$http({
+			method: 'GET',
+			url: '/api/{{table.TableName}}/GetById/'+ parseInt(model.id)
+		}).then(function (response) {
+		   $scope.vmModel = response.data;
+		}, function (error) {
+		   console.log(error);
+		});
+	};
+
+	//******=========Save=========******
+	$scope.Save = function () {
+		$http({
+			method: 'POST',
+			url: '/api/{{table.TableName}}/Save',
+			data: $scope.vmModel
+		}).then(function (response) {
+			$scope.reset();
+			GetAll();
+		}, function (error) {
+			console.log(error);
+		});
+	};
+
+	//******=========Update=========******
+	$scope.Update = function () {
+		$http({
+			method: 'PUT',
+			url: '/api/{{table.TableName}}/UpdateById/'+ parseInt(model.id),
+			data: $scope.vmModel
+		}).then(function (response) {
+			$scope.reset();
+			GetAll();
+		}, function (error) {
+			console.log(error);
+		});
+	};
+
+	//******=========Delete=========******
+	$scope.Delete = function (model) {
+		var IsConf = confirm('You are about to delete data. Are you sure?');
+		if (IsConf) {
+			$http({
+				method: 'DELETE',
+				url: '/api/{{table.TableName}}/DeleteById/'+ parseInt(model.id),
+			}).then(function (response) {
+				$scope.reset();
+				GetAll();
+			}, function (error) {
+				console.log(error);
+			});
+		}
+	};
+
+	//******=========Clear Form=========******
+	$scope.Reset = function () {
+		$scope.vmModel = {};
+	};
+
+}]);

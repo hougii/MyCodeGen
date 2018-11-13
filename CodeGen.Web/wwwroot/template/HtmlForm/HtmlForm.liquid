@@ -1,0 +1,14 @@
+﻿<form name='form{{table.TableName}}'>
+{%- for column in columns -%}
+  <div class='form-group'>
+    <label for='{{column.ColumnName}}' class='control-label'>{{column.ColumnDescription}}</label>
+    <input type='text' class='form-control' ng-model='vmModel.{{column.ColumnName}}' name='{{column.ColumnName}}' />
+  </div>
+{%- endfor -%}
+  
+ <div class='form-group'>
+  <input type='submit' name='reset' value='Reset' ng-click='Reset()' />
+  <input type='submit' name='update' value='Update' ng-click='Update()' />
+  <input type='submit' name='submit' value='Save' ng-click='Save()' />
+ </div>
+</form>

@@ -143,48 +143,9 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                     document.getElementById(elementIDVm).innerHTML += rowGen["DbModel"] + "\r\n";
                 }
                 //SQL
-                if (rowGen.hasOwnProperty("SPSet")) {
-                    document.getElementById(elementIDSql).innerHTML += rowGen["SPSet"] + "\r\n" + "\r\n";
+                if (rowGen.hasOwnProperty("SP")) {
+                    document.getElementById(elementIDSql).innerHTML += rowGen["SP"] + "\r\n" + "\r\n";
                 }
-                if (rowGen.hasOwnProperty("SPGet")) {
-                    document.getElementById(elementIDSql).innerHTML += rowGen["SPGet"] + "\r\n" + "\r\n";
-                }
-                if (rowGen.hasOwnProperty("SPPut")) {
-                    document.getElementById(elementIDSql).innerHTML += rowGen["SPPut"] + "\r\n" + "\r\n";
-                }
-                if (rowGen.hasOwnProperty("SPDelete")) {
-                    document.getElementById(elementIDSql).innerHTML += rowGen["SPDelete"] + "\r\n" + "\r\n";
-                }
-
-                //rowGen = response.data.spCollection;
-
-                //if (rowGen.length > 0) {
-                //    for (var i = 0; i < rowGen.length; i++) {
-                //        //SP
-                //        if (i == 0)
-                //            document.getElementById(elementIDSql).innerHTML += "--+++++++++ SET SP +++++++ \r\n" + rowGen[i] + "\r\n";
-                //        else if (i == 1)
-                //            document.getElementById(elementIDSql).innerHTML += "--+++++++++ GET SP +++++++++ \r\n" + rowGen[i] + "\r\n";
-                //        else if (i == 2)
-                //            document.getElementById(elementIDSql).innerHTML += "--+++++++++ PUT SP +++++++++ \r\n" + rowGen[i] + "\r\n";
-                //        else if (i == 3)
-                //            document.getElementById(elementIDSql).innerHTML += "--+++++++++ DELETE SP +++++++++ \r\n" + rowGen[i] + "\r\n";
-                //        //VM
-                //        else if (i == 4)
-                //            document.getElementById(elementIDVm).innerHTML +=  rowGen[i] + "\r\n";
-                //        //VIEW
-                //        else if (i == 5)
-                //            document.getElementById(elementIDVu).innerHTML += "<!-- +++++++++ HTML FORM +++++++++ --> \r\n" + rowGen[i] + "\r\n";
-                //        //ANGULAR
-                //        else if (i == 6)
-                //            document.getElementById(elementIDNg).innerHTML += "// +++++++++ AngularJS Controller +++++++++ \r\n" + rowGen[i] + "\r\n";
-                //        //API
-                //        else if (i == 7)
-                //            document.getElementById(elementIDApi).innerHTML += "// +++++++++ API Controller +++++++++ \r\n" + rowGen[i] + "\r\n";
-                //        else
-                //            document.getElementById(elementIDSql).innerHTML += " Error !!";
-                //    };
-                //};
             }, function (error) {
                 console.log(error);
             });

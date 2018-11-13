@@ -1,0 +1,172 @@
+﻿
+/// <summary>
+/// {{table.TableDescription}} 相關的API服務
+/// </summary>
+[Route("api/{{table.TableName}}"), Produces("application/json")]
+public class {{table.TableName}}Controller : Controller
+{
+    private dbContext _ctx = null;
+    public {{table.TableName}}Controller(dbContext context)
+    {
+        _ctx = context;
+    }
+
+    // GET: api/{{table.TableName}}/GetAll
+    [HttpGet, Route("GetAll")]
+    public async Task<object> GetAll()
+    {
+        List<{{table.TableName}}> {{table.TableName}}s = null;
+        try
+        {
+            using (_ctx)
+            {
+                {{table.TableName}}s = await _ctx.{{table.TableName}}.ToListAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.ToString();
+        }
+        return {{table.TableName}}s;
+    }
+
+    // GET api/{{table.TableName}}/GetById/5
+    [HttpGet, Route("GetById/{id}")]
+    public async Task<{{table.TableName}}> GetById(int id)
+    {
+        {{table.TableName}} obj = null;
+        try
+        {
+            using (_ctx)
+            {
+                obj = await _ctx.{{table.TableName}}.FirstOrDefaultAsync(x => x.Id == id);
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.ToString();
+        }
+        return obj;
+    }
+
+
+    // POST api/{{table.TableName}}/Save 
+    [HttpPost, Route("Save")]
+    public async Task<object> Save([FromBody]{{table.TableName}} model)
+    {
+        object result = null; 
+		string message = "";
+        if (model == null)
+        {
+            return BadRequest();
+        }
+        using (_ctx)
+        {
+            using (var _ctxTransaction = _ctx.Database.BeginTransaction())
+            {
+                try
+                {
+                    _ctx.{{table.TableName}}.Add(model);
+                    await _ctx.SaveChangesAsync();
+                    _ctxTransaction.Commit();
+                    message = "Ok";
+                }
+                catch (Exception e)
+                {
+                    _ctxTransaction.Rollback();
+                    e.ToString();
+                    message = "Error";
+                }
+
+                result = new
+                {
+                    message
+                };
+            }
+        }
+        return result;
+    }
+
+    // PUT api/{{table.TableName}}/UpdateById/5 
+    [HttpPut, Route("UpdateById/{id}")]
+    public async Task<object> UpdateById(int id, [FromBody]{{table.TableName}} model)
+    {
+        object result = null; string message = string.Empty;
+        if (model == null)
+        {
+            return BadRequest();
+        }
+        using (_ctx)
+        {
+            using (var _ctxTransaction = _ctx.Database.BeginTransaction())
+            {
+                try
+                {
+                    var entityUpdate = _ctx.{{table.TableName}}.FirstOrDefault(x => x.Id == id);
+                    if (entityUpdate != null)
+                    {
+                        
+                        entityUpdate.RecordNo = model.RecordNo;
+                        entityUpdate.Type = model.Type;
+                        entityUpdate.TargetNo = model.TargetNo;
+                        entityUpdate.MemberId = model.MemberId;
+                        entityUpdate.ClientIP = model.ClientIP;
+                        entityUpdate.CreateTime = model.CreateTime;
+
+
+                        await _ctx.SaveChangesAsync();
+                    }
+                    _ctxTransaction.Commit();
+                    message = "Ok";
+                }
+                catch (Exception e)
+                {
+                    _ctxTransaction.Rollback(); e.ToString();
+                    message = "Error";
+                }
+
+                result = new
+                {
+                    message
+                };
+            }
+        }
+        return result;
+    }
+
+    // DELETE api/{{table.TableName}}/DeleteById/5
+    [HttpDelete, Route("DeleteById/{id}")]
+    public async Task<object> DeleteById(int id)
+    {
+        object result = null; string message = "";
+        using (_ctx)
+        {
+            using (var _ctxTransaction = _ctx.Database.BeginTransaction())
+            {
+                try
+                {
+                    var idToRemove = _ctx.{{table.TableName}}.SingleOrDefault(x => x.Id == id);
+                    if (idToRemove != null)
+                    {
+                        _ctx.{{table.TableName}}.Remove(idToRemove);
+                        await _ctx.SaveChangesAsync();
+                    }
+                    _ctxTransaction.Commit();
+                    message = "Ok";
+                }
+                catch (Exception e)
+                {
+                    _ctxTransaction.Rollback(); 
+					e.ToString();
+                    message = "Error";
+                }
+
+                result = new
+                {
+                    message
+                };
+            }
+        }
+        return result;
+    }
+}

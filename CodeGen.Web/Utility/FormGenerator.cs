@@ -1,4 +1,5 @@
 ﻿using CodeGen.Web.Models;
+using DotLiquid;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CodeGen.Web.Utility
 {
-    public class ViewGenerator
+    public class FormGenerator
     {
         /// <summary>
         /// (TW)產生View的程式碼
@@ -21,6 +22,21 @@ namespace CodeGen.Web.Utility
         /// <returns></returns>
         public static dynamic GenerateForm(TableInfo table, List<ColumnInfo> columns, string contentRootPath)
         {
+
+            var result = "";
+            var liquidPath = contentRootPath + "\\template\\HtmlForm\\HtmlForm.liquid";
+
+            //(TW)使用Liquid的框架產生程式碼，傳入參數：table , columns
+            var templateContent = File.ReadAllText(liquidPath, Encoding.UTF8);
+            Template template = Template.Parse(templateContent);
+            var tableForLiquid = new TableInfoForLiquid(table);
+            var columnsForLiquid = columns.Select(m => new ColumnInfoForLiquid(m));
+            result = template.Render(Hash.FromAnonymousObject(
+                new { table = tableForLiquid, columns = columnsForLiquid }));
+
+            return result;
+
+#if false //origin code
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             StringBuilder builderPrm = new StringBuilder();
             StringBuilder builderSub = new StringBuilder();
@@ -83,6 +99,7 @@ namespace CodeGen.Web.Utility
             }
 
             return fileContent.ToString();
+#endif
         }
     }
 }

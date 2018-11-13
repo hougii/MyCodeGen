@@ -207,28 +207,23 @@ namespace CodeGen.Web.Controllers
                 //(TW)頁面上勾選的Table Columns資訊反序列化 (包括從DB取得的資訊內容)
                 var dbColumns = JsonConvert.DeserializeObject<List<ColumnInfo>>(columnsJson.ToString());
 
-                string fileContentSet = string.Empty; string fileContentGet = string.Empty;
+                string fileContentSP = string.Empty; string fileContentGet = string.Empty;
                 string fileContentPut = string.Empty; string fileContentDelete = string.Empty;
                 string fileContentDbModel = string.Empty; string fileContentView = string.Empty;
                 string fileContentNg = string.Empty; string fileContentAPIGet = string.Empty;
                 string fileContentAPIGetById = string.Empty;
 
                 //SP
-                fileContentSet = SpGenerator.GenerateSetSP(dbTable, dbColumns, webRootPath);
-                fileContentGet = SpGenerator.GenerateGetSP(dbTable, dbColumns, webRootPath);
-                fileContentPut = SpGenerator.GeneratePutSP(dbTable, dbColumns, webRootPath);
-                fileContentDelete = SpGenerator.GenerateDeleteSP(dbTable, dbColumns, webRootPath);
-                resultCollectionDic.Add("SPSet", fileContentSet);
-                resultCollectionDic.Add("SPGet",fileContentGet);
-                resultCollectionDic.Add("SPPut", fileContentPut);
-                resultCollectionDic.Add("SPDelete", fileContentDelete);
+                fileContentSP = SpGenerator.GenerateSP(dbTable, dbColumns, webRootPath);
+                resultCollectionDic.Add("SP", fileContentSP);
+               
 
                 //DbModel
                 fileContentDbModel = ModelGenerator.GenerateModel(dbTable, dbColumns, webRootPath);
                 resultCollectionDic.Add("DbModel", fileContentDbModel);
 
                 //View
-                fileContentView = ViewGenerator.GenerateForm(dbTable,dbColumns, webRootPath);
+                fileContentView = FormGenerator.GenerateForm(dbTable,dbColumns, webRootPath);
                 resultCollectionDic.Add("View", fileContentView);
 
                 //NG

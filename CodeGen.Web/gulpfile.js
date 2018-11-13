@@ -73,4 +73,5 @@ gulp.task('serve', function () {
     });
 });
 
-gulp.task('default', ['build-all','serve']);
+//gulp.task('default', ['build-all','serve']);
+gulp.task('default', ['build-all','copy-all']);
