@@ -19,6 +19,7 @@ namespace CodeGen.Web.Models
         {
             base.ColumnId = column.ColumnId;
             base.ColumnName = column.ColumnName;
+            base.MapColumnName = column.MapColumnName;
             base.ColumnDescription = column.ColumnDescription;
             base.DataType = column.DataType;
             base.IsNullable = column.IsNullable;
@@ -43,6 +44,7 @@ namespace CodeGen.Web.Models
             {
                 ColumnId,
                 ColumnName,
+                MapColumnName,
                 ColumnDescription,
                 DataType,
                 ModelType,

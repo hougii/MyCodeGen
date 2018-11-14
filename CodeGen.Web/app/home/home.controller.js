@@ -3,7 +3,9 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
 
     $scope.dbId = 0; $scope.dbname = null;
     $scope.tableInfo = null;
-    $scope.collist = []; $scope.isCheckAll = 0;
+    $scope.collist = [];
+    $scope.isCheckAll = 0;
+    $scope.colmaplist = [];
     $scope.copySuccess = function () {
         console.log('Copied!');
     };
@@ -76,6 +78,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         }).then(function successCallback(response) {
             $scope.tableInfo = table;
             $scope.colist = response.data;
+            $scope.colmaplist = response.data;//¼È
             
         }, function errorCallback(response) {
             console.log(response);
@@ -90,6 +93,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 $scope.collist.push({
                     ColumnId: itm.columnId,
                     ColumnName: itm.columnName,
+                    MapColumnName:'',
                     DataType: itm.dataType,
                     MaxLength: itm.maxLength,
                     IsNullable: itm.isNullable,
