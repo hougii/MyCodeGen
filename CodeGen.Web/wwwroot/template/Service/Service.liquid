@@ -1,27 +1,27 @@
-﻿	/// <summary>
+﻿    /// <summary>
     /// 針對{{table.TableDescription}}提供的相關服務
     /// </summary>
     public class {{table.TableName}}Service : I{{table.TableName}}Service
     {
-		#region {{table.TableDescription}}相關({{table.TableName}})
-		 
+        #region {{table.TableDescription}}相關({{table.TableName}})
+         
         /// <summary>
         /// 依條件取得{{table.TableDescription}}資訊
         /// </summary>
         /// <param name="condition">條件</param>
         /// <returns></returns>
         public IEnumerable<{{table.TableName}}> Query{{table.TableName}}ByCondition({{table.TableName}}Condition condition){
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
 
-		/// <summary>
+        /// <summary>
         /// 取得所有{{table.TableDescription}}
         /// </summary>
         /// <returns></returns>
         public IEnumerable<{{table.TableName}}> GetAll{{table.TableName}}(){
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
 
         /// <summary>
@@ -30,8 +30,8 @@
         /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
         public {{table.TableName}} Get{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}){
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
 
         #region {{table.TableDescription}}維護
@@ -41,8 +41,8 @@
         /// <param name="model"></param>
         /// <returns>建立完成後的Model(包括流水號)</returns>
         public {{table.TableName}} Create{{table.TableName}}({{table.TableName}} model){
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// 更新該筆{{table.TableDescription}}
@@ -51,8 +51,8 @@
         /// <param name="model"></param>
         /// <returns>成功/失敗</returns>
         public bool Update{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}, {{table.TableName}} model){
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// 刪除該筆{{table.TableDescription}}
@@ -60,9 +60,9 @@
         /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
         public bool Delete{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}){
-			throw new NotImplementedException();
-		}
-		#endregion
-		#endregion
+            throw new NotImplementedException();
+        }
+        #endregion
+        #endregion
 
-	}
+    }

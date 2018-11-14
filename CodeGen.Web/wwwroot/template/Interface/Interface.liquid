@@ -1,11 +1,11 @@
-﻿	/// <summary>
+﻿    /// <summary>
     /// 針對{{table.TableDescription}}提供的相關服務
     /// </summary>
     [ServiceContract]
     public interface I{{table.TableName}}Service
     {
-		#region {{table.TableDescription}}相關({{table.TableName}})
-		 
+        #region {{table.TableDescription}}相關({{table.TableName}})
+         
         /// <summary>
         /// 依條件取得{{table.TableDescription}}資訊
         /// </summary>
@@ -15,7 +15,7 @@
         IEnumerable<{{table.TableName}}> Query{{table.TableName}}ByCondition({{table.TableName}}Condition condition);
 
 
-		/// <summary>
+        /// <summary>
         /// 取得所有{{table.TableDescription}}
         /// </summary>
         /// <returns></returns>
@@ -57,7 +57,7 @@
         /// <returns></returns>
         [OperationContract]
         bool Delete{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}});
-		#endregion
-		#endregion
+        #endregion
+        #endregion
 
-	}
+    }

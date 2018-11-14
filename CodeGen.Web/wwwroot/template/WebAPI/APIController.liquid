@@ -55,7 +55,7 @@ public class {{table.TableName}}Controller : Controller
     public async Task<object> Save([FromBody]{{table.TableName}} model)
     {
         object result = null; 
-		string message = "";
+        string message = "";
         if (model == null)
         {
             return BadRequest();
@@ -157,7 +157,7 @@ public class {{table.TableName}}Controller : Controller
                 catch (Exception e)
                 {
                     _ctxTransaction.Rollback(); 
-					e.ToString();
+                    e.ToString();
                     message = "Error";
                 }
 

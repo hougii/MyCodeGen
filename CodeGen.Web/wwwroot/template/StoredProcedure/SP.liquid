@@ -2,7 +2,7 @@
 {%- assign tempColumnNames  = '' -%}
 {%- for operation in columns -%}
     {%- assign controllerName = operation.ColumnName -%}
-	{%- assign tempColumnNames = tempColumnNames |append:"," |append:operation.ColumnName -%}
+    {%- assign tempColumnNames = tempColumnNames |append:"," |append:operation.ColumnName -%}
 {%- endfor -%}
 {%- assign columnNameArray = tempColumnNames |split:','-%}
 
@@ -14,31 +14,31 @@ CREATE PROCEDURE [dbo].[SP_{{table.TableName}}_Set]
 (  
 {%- assign columnResults ='' | split:'' -%}
 {%- for column in columns -%}
-	{% capture columnTemp%}
-	@{{column.ColumnName}}{{" "}} {%- if column.MaxLength > 0 -%} {{column.DataType}}({{column.MaxLength}}) {%- else -%} {{column.DataType}} {%- endif -%}
-	{%- endcapture -%}
-	{%- assign tempColumnInfos =tempColumnInfos | append:"," |append:columnTemp -%}
+    {% capture columnTemp%}
+    @{{column.ColumnName}}{{" "}} {%- if column.MaxLength > 0 -%} {{column.DataType}}({{column.MaxLength}}) {%- else -%} {{column.DataType}} {%- endif -%}
+    {%- endcapture -%}
+    {%- assign tempColumnInfos =tempColumnInfos | append:"," |append:columnTemp -%}
 {%- endfor -%}
 {{tempColumnInfos |split:','| join:", "}}
 )
 AS
 BEGIN
 BEGIN TRY
-	BEGIN TRANSACTION;
-	BEGIN		
-		INSERT INTO [dbo].[{{table.TableName}}]( {{columnNameArray | join:","}} ) VALUES (@{{columnNameArray | join:",@"}})
-	END 	
-	COMMIT TRANSACTION;
+    BEGIN TRANSACTION;
+    BEGIN        
+        INSERT INTO [dbo].[{{table.TableName}}]( {{columnNameArray | join:","}} ) VALUES (@{{columnNameArray | join:",@"}})
+    END     
+    COMMIT TRANSACTION;
 END TRY
 BEGIN CATCH
-	IF @@TRANCOUNT > 0
-	ROLLBACK TRANSACTION;
-	DECLARE @ErrorNumber INT = ERROR_NUMBER();
-	DECLARE @ErrorLine INT = ERROR_LINE();
-	DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-	DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErrorState INT = ERROR_STATE();
-	--print @ErrorMessage; print @ErrorLine
+    IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION;
+    DECLARE @ErrorNumber INT = ERROR_NUMBER();
+    DECLARE @ErrorLine INT = ERROR_LINE();
+    DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+    DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
+    DECLARE @ErrorState INT = ERROR_STATE();
+    --print @ErrorMessage; print @ErrorLine
 END CATCH
 END
 GO
@@ -54,23 +54,23 @@ CREATE PROCEDURE [dbo].[SP_{{table.TableName}}_Query]
 AS
 BEGIN
 BEGIN TRY
-	BEGIN TRANSACTION;
-	BEGIN		
-		SELECT {{columnNameArray | join:","}} FROM [dbo].[{{table.TableName}}]
-		OFFSET @Start ROW
-		FETCH NEXT @PageLimit ROWS ONLY
-	END 	
-	COMMIT TRANSACTION;
+    BEGIN TRANSACTION;
+    BEGIN        
+        SELECT {{columnNameArray | join:","}} FROM [dbo].[{{table.TableName}}]
+        OFFSET @Start ROW
+        FETCH NEXT @PageLimit ROWS ONLY
+    END     
+    COMMIT TRANSACTION;
 END TRY
 BEGIN CATCH
-	IF @@TRANCOUNT > 0
-	ROLLBACK TRANSACTION;
-	DECLARE @ErrorNumber INT = ERROR_NUMBER();
-	DECLARE @ErrorLine INT = ERROR_LINE();
-	DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-	DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErrorState INT = ERROR_STATE();
-	--print @ErrorMessage; print @ErrorLine
+    IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION;
+    DECLARE @ErrorNumber INT = ERROR_NUMBER();
+    DECLARE @ErrorLine INT = ERROR_LINE();
+    DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+    DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
+    DECLARE @ErrorState INT = ERROR_STATE();
+    --print @ErrorMessage; print @ErrorLine
 END CATCH
 END
 GO
@@ -85,29 +85,29 @@ CREATE PROCEDURE [dbo].[SP_{{table.TableName}}_Get]
 AS
 BEGIN
 BEGIN TRY
-	BEGIN TRANSACTION;
-	BEGIN		
-		UPDATE [dbo].[{{table.TableName}}] SET 
+    BEGIN TRANSACTION;
+    BEGIN        
+        UPDATE [dbo].[{{table.TableName}}] SET 
 {%- for column in columns -%}
 {%- capture columnTemp -%}
 {{column.ColumnName}}{{" = "}}@{{column.ColumnName}}
 {%- endcapture -%}
 {%- assign tempSetColumnInfos =tempSetColumnInfos| append:"," |append:columnTemp|strip -%}
 {%- endfor -%}
-	{{tempSetColumnInfos |split:',' | join:", "}}
-		WHERE [CONDITIONS]
-	END 	
-	COMMIT TRANSACTION;
+    {{tempSetColumnInfos |split:',' | join:", "}}
+        WHERE [CONDITIONS]
+    END     
+    COMMIT TRANSACTION;
 END TRY
 BEGIN CATCH
-	IF @@TRANCOUNT > 0
-	ROLLBACK TRANSACTION;
-	DECLARE @ErrorNumber INT = ERROR_NUMBER();
-	DECLARE @ErrorLine INT = ERROR_LINE();
-	DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-	DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErrorState INT = ERROR_STATE();
-	--print @ErrorMessage; print @ErrorLine
+    IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION;
+    DECLARE @ErrorNumber INT = ERROR_NUMBER();
+    DECLARE @ErrorLine INT = ERROR_LINE();
+    DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+    DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
+    DECLARE @ErrorState INT = ERROR_STATE();
+    --print @ErrorMessage; print @ErrorLine
 END CATCH
 END
 GO
@@ -122,21 +122,21 @@ CREATE PROCEDURE [dbo].[SP_{{table.TableName}}_Delete]
 AS
 BEGIN
 BEGIN TRY
-	BEGIN TRANSACTION;
-	BEGIN		
-		DELETE FROM [dbo].[{{table.TableName}}] WHERE [CONDITIONS]
-	END 	
-	COMMIT TRANSACTION;
+    BEGIN TRANSACTION;
+    BEGIN        
+        DELETE FROM [dbo].[{{table.TableName}}] WHERE [CONDITIONS]
+    END     
+    COMMIT TRANSACTION;
 END TRY
 BEGIN CATCH
-	IF @@TRANCOUNT > 0
-	ROLLBACK TRANSACTION;
-	DECLARE @ErrorNumber INT = ERROR_NUMBER();
-	DECLARE @ErrorLine INT = ERROR_LINE();
-	DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-	DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
-	DECLARE @ErrorState INT = ERROR_STATE();
-	--print @ErrorMessage; print @ErrorLine
+    IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION;
+    DECLARE @ErrorNumber INT = ERROR_NUMBER();
+    DECLARE @ErrorLine INT = ERROR_LINE();
+    DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+    DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
+    DECLARE @ErrorState INT = ERROR_STATE();
+    --print @ErrorMessage; print @ErrorLine
 END CATCH
 END
 GO
