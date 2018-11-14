@@ -117,8 +117,10 @@
             <div class="panel-heading">
                 <div class="pull-left">
                     <h6 class="panel-title txt-dark mt-10"><i class="zmdi zmdi-code mr-20"></i>Generated Code</h6>
+                    
                 </div>
                 <div class="pull-right">
+                    <button type="button" class="btn btn-sm btn-warning pull-right pb-10 ml-5" clipboard supported="supported" text="dbname" on-copied="copySuccess()" on-error="copyFail(err)"><strong>copy</strong></button>
                     <button type="button" class="btn btn-sm btn-danger pull-right pb-10 ml-5" ng-click="generate()"><strong>GENERATE</strong></button>
                 </div>
                 <div class="clearfix"></div>
@@ -127,7 +129,7 @@
                 <div class="panel-body">
                     <div class="tab-struct custom-tab-2 mt-0">
                         <ul role="tablist" class="nav nav-tabs" id="myTabs_15">
-                            <li role="presentation" class="active">
+                            <li role="presentation">
                                 <a data-toggle="tab" id="views_tab_1" role="tab" href="#views" aria-expanded="false">HTML Views</a>
                             </li>
                             <li role="presentation" class="">
@@ -148,10 +150,9 @@
                             <li role="presentation" class="">
                                 <a aria-expanded="true" data-toggle="tab" role="tab" id="interface_tab_1" href="#interface">Interface</a>
                             </li>
-
                         </ul>
                         <div class="tab-content" id="myTabContent_15">
-                            <div id="views" class="tab-pane fade  active in" role="tabpanel" style="max-height:450px; overflow-y: auto;">
+                            <div id="views" class="tab-pane fade" role="tabpanel" style="max-height:450px; overflow-y: auto;">
                                 <pre class="pa-10" lang="html"><xmp id="genCodeVu"></xmp></pre>
                             </div>
                             <div id="angular" class="tab-pane fade" role="tabpanel" style="max-height:450px; overflow-y: auto;">
@@ -160,7 +161,7 @@
                             <div id="csharp" class="tab-pane fade" role="tabpanel" style="max-height:450px; overflow-y: auto;">
                                 <pre class="pa-10" lang="sql"><xmp id="genCodeAPI"></xmp></pre>
                             </div>
-                            <div id="model" class="tab-pane fade" role="tabpanel" style="max-height:450px; overflow-y: auto;">
+                            <div id="model" class="tab-pane fade  active in" role="tabpanel" style="max-height:450px; overflow-y: auto;">
                                 <pre class="pa-10" lang="cs"><xmp id="genCodeVm"></xmp></pre>
                             </div>
                             <div id="sql" class="tab-pane fade" role="tabpanel" style="max-height:450px; overflow-y: auto;">
