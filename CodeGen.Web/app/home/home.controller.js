@@ -4,7 +4,13 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
     $scope.dbId = 0; $scope.dbname = null;
     $scope.tableInfo = null;
     $scope.collist = []; $scope.isCheckAll = 0;
+    $scope.copySuccess = function () {
+        console.log('Copied!');
+    };
 
+    $scope.copyFail = function (err) {
+        console.error('Error!', err);
+    };
 
     $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
@@ -102,7 +108,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
 
     //產生程式碼
     $scope.generate = function () {
-        $('.nav-tabs a[href="#views"]').tab('show');
+        $('.nav-tabs a[href="#model"]').tab('show');
 
         var rowGen = [];
         var elementIDSql = 'genCodeSql';
