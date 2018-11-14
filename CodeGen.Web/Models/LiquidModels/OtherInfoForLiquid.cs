@@ -24,9 +24,15 @@ namespace CodeGen.Web.Models
         public string IndentityColumn { get; set; }
 
         /// <summary>
+        /// (TW)資料表下的Key值欄位類別
+        /// </summary>
+        public string IndentityModelType { get; set; }
+
+        /// <summary>
         /// (TW)資料表下的Key值欄位描述
         /// </summary>
         public string IndentityColumnDescription { get; set; }
+
 
 
         /// <summary>
@@ -39,6 +45,7 @@ namespace CodeGen.Web.Models
             return new
             {
                 IndentityColumn,
+                IndentityModelType,
                 IndentityColumnDescription
             };
         }

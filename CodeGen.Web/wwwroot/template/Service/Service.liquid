@@ -29,7 +29,7 @@
         /// </summary>
         /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
-        public {{table.TableName}} Get{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}){
+        public {{table.TableName}} Get{{table.TableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}){
             throw new NotImplementedException();
         }
 
@@ -50,7 +50,7 @@
         /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <param name="model"></param>
         /// <returns>成功/失敗</returns>
-        public bool Update{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}, {{table.TableName}} model){
+        public bool Update{{table.TableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}, {{table.TableName}} model){
             throw new NotImplementedException();
         }
 
@@ -59,7 +59,7 @@
         /// </summary>
         /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
-        public bool Delete{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}){
+        public bool Delete{{table.TableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}){
             throw new NotImplementedException();
         }
         #endregion

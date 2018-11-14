@@ -268,6 +268,7 @@ namespace CodeGen.Web.Controllers
             if (identityColumn != null)
             {
                 result.IndentityColumn = identityColumn.ColumnName;
+                result.IndentityModelType = identityColumn.ModelType;
                 result.IndentityColumnDescription = identityColumn.ColumnDescription;
             }
             return result;

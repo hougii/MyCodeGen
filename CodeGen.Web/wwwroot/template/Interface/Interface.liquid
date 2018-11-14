@@ -29,7 +29,7 @@
         /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
         [OperationContract]
-        {{table.TableName}} Get{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}});
+        {{table.TableName}} Get{{table.TableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}});
 
 
         #region {{table.TableDescription}}維護
@@ -48,7 +48,7 @@
         /// <param name="model"></param>
         /// <returns>成功/失敗</returns>
         [OperationContract]
-        bool Update{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}, {{table.TableName}} model);
+        bool Update{{table.TableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}, {{table.TableName}} model);
 
         /// <summary>
         /// 刪除該筆{{table.TableDescription}}
@@ -56,7 +56,7 @@
         /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
         [OperationContract]
-        bool Delete{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}});
+        bool Delete{{table.TableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}});
         #endregion
         #endregion
 
