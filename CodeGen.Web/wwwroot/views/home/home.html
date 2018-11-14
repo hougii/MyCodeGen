@@ -1,6 +1,6 @@
 <!-- Row -->
 <div class="row" style="overflow-x: auto;">
-    <div style="width:1500px" >
+    <div style="width:2000px" >
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
             <div class="panel panel-default card-view">
                 <div class="panel-heading">
@@ -113,7 +113,8 @@
             <div class="panel panel-default card-view">
                 <div class="panel-heading">
                     <div class="pull-left">
-                        <h6 class="panel-title txt-dark"><i class="zmdi zmdi-grid mr-20"></i>Columns Map</h6>
+                        <input type="checkbox" id="enableMap">
+                        <h6 class="panel-title txt-dark"><i class="zmdi zmdi-grid mr-20"></i> <label for="enableMap">Map Columns</label> </h6>
                     </div>
                     <div class="pull-right col-sm-4">
                         <input type="text" class="form-control" ng-model="search_clmmap" name="search_clmmap" id="search_clmmap" placeholder="Search Column..." />
@@ -148,6 +149,7 @@
                     
                 </div>
                 <div class="pull-right">
+                    <button type="button" class="btn btn-sm btn-danger pull-right pb-10 ml-5" ng-click="generateAllTable()"><strong>MD File</strong></button>
                     <button type="button" class="btn btn-sm btn-warning pull-right pb-10 ml-5" clipboard supported="supported" text="dbname" on-copied="copySuccess()" on-error="copyFail(err)"><strong>copy</strong></button>
                     <button type="button" class="btn btn-sm btn-danger pull-right pb-10 ml-5" ng-click="generate()"><strong>GENERATE</strong></button>
                 </div>
@@ -178,6 +180,9 @@
                             <li role="presentation" class="">
                                 <a aria-expanded="true" data-toggle="tab" role="tab" id="interface_tab_1" href="#interface">Interface</a>
                             </li>
+                            <li role="presentation" class="">
+                                <a aria-expanded="true" data-toggle="tab" role="tab" id="interface_tab_1" href="#markdown">Markdown</a>
+                            </li>
                         </ul>
                         <div class="tab-content" id="myTabContent_15">
                             <div id="views" class="tab-pane fade" role="tabpanel" style="max-height:450px; overflow-y: auto;">
@@ -200,6 +205,9 @@
                             </div>
                             <div id="interface" class="tab-pane fade" role="tabpanel" style="max-height:450px; overflow-y: auto;">
                                 <pre class="pa-10" lang="cs"><xmp id="genCodeInterface"></xmp></pre>
+                            </div>
+                            <div id="markdown" class="tab-pane fade" role="tabpanel" style="max-height:450px; overflow-y: auto;">
+                                <pre class="pa-10" lang="cs"><xmp id="genCodeMarkdown"></xmp></pre>
                             </div>
                         </div>
                     </div>

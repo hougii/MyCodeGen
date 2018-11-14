@@ -1,0 +1,40 @@
+﻿# 資料庫說明文件
+
+# 目錄
+
+[TOC]
+
+# 修訂歷程
+
+| Date       | Author | Version | Change Reference         |
+| ---------- | ------ | ------- | ------------------------ |
+|  |  |     |  |
+# 資料表設計
+
+## Table:{{table.TableName}}( {{table.TableDescription}})
+
+| TableName     | Description  | Primary Key |
+| ------------- | ------------ | ----------- |
+| {{table.TableName}} |  {{table.TableDescription}} |     |
+
+**變更歷程：**
+
+| Update Record |
+| ------------- |
+|               |
+
+**Index資訊：**
+
+| Columns | IndexType | Description | Memo |
+| ------- | --------- | ----------- | ---- |
+|         |           |             |      |
+
+**欄位資訊：**
+
+| ColumnName  | Type          | Nullable? | Description  | Memo |
+| ----------- | ------------- | --------- | ------------ | ---- |
+{%- for column in columns -%}
+| {{column.ColumnName}}  | {%- if column.MaxLength > 0 -%} {{column.DataType}}({{column.MaxLength}}) {%- else -%} {{column.DataType}} {%- endif -%}           | {{column.IsNullable}}         | {{column.ColumnDescription}}       |   |
+{%- endfor -%}
+
+
