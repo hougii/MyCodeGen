@@ -202,37 +202,50 @@ namespace CodeGen.Web.Controllers
                 var tableJson = postData.table;
                 var columnsJson = postData.columns;
 
-                //TODO:
-                var dbTable = JsonConvert.DeserializeObject<TableInfo>(tableJson.ToString());
+                //(TW)取得Table資訊
+                var tableInfo = JsonConvert.DeserializeObject<TableInfo>(tableJson.ToString());
                 //(TW)頁面上勾選的Table Columns資訊反序列化 (包括從DB取得的資訊內容)
-                var dbColumns = JsonConvert.DeserializeObject<List<ColumnInfo>>(columnsJson.ToString());
+                List<ColumnInfo> columnInfos = JsonConvert.DeserializeObject<List<ColumnInfo>>(columnsJson.ToString());
 
-                string fileContentSP = string.Empty; string fileContentGet = string.Empty;
-                string fileContentPut = string.Empty; string fileContentDelete = string.Empty;
-                string fileContentDbModel = string.Empty; string fileContentView = string.Empty;
-                string fileContentNg = string.Empty; string fileContentAPIGet = string.Empty;
-                string fileContentAPIGetById = string.Empty;
+                var tableInfoForLiquid = new TableInfoForLiquid(tableInfo);
+                var columnInfosForLiquid = columnInfos.Select(m => new ColumnInfoForLiquid(m)).ToList();
+                var otherInfoForLiquid = new OtherInfoForLiquid();//TODO:
+
+                string fileContentSP = string.Empty;
+                string fileContentDbModel = string.Empty;
+                string fileContentView = string.Empty;
+                string fileContentNg = string.Empty;
+                string fileContentAPI = string.Empty;
+                string fileContentService = string.Empty;
+                string fileContentInterface = string.Empty;
 
                 //SP
-                fileContentSP = SpGenerator.GenerateSP(dbTable, dbColumns, webRootPath);
+                fileContentSP = new SpGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
                 resultCollectionDic.Add("SP", fileContentSP);
-               
 
                 //DbModel
-                fileContentDbModel = ModelGenerator.GenerateModel(dbTable, dbColumns, webRootPath);
+                fileContentDbModel = new ModelGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
                 resultCollectionDic.Add("DbModel", fileContentDbModel);
 
                 //View
-                fileContentView = FormGenerator.GenerateForm(dbTable,dbColumns, webRootPath);
+                fileContentView = new FormGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
                 resultCollectionDic.Add("View", fileContentView);
 
                 //NG
-                fileContentNg = NgGenerator.GenerateNgController(dbTable, dbColumns, webRootPath);
+                fileContentNg = new NgGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
                 resultCollectionDic.Add("NG", fileContentNg);
 
                 //API
-                fileContentAPIGet = APIGenerator.GenerateAPIGet(dbTable, dbColumns, webRootPath);
-                resultCollectionDic.Add("APIGet", fileContentAPIGet);
+                fileContentAPI = new APIGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                resultCollectionDic.Add("APIGet", fileContentAPI);
+
+                //Service
+                fileContentAPI = new ServiceGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                resultCollectionDic.Add("Service", fileContentAPI);
+
+                //Interface
+                fileContentAPI = new InterfaceGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                resultCollectionDic.Add("Interface", fileContentAPI);
             }
             catch (Exception ex)
             {

@@ -7,21 +7,27 @@ using System.Threading.Tasks;
 namespace CodeGen.Web.Models
 {
     /// <summary>
-    /// (TW)Table資訊 For Liquid
+    /// (TW)其它資訊
     /// </summary>
-    /// <remarks>(TW)為了達成於Liquid下可以直接使用的Model，而不動到原Model架構</remarks>
-    public class TableInfoForLiquid : TableInfo, ILiquidizable
+    public class OtherInfoForLiquid : ILiquidizable
     {
         /// <summary>
         /// (TW)建構子
         /// </summary>
-        /// <param name="table"></param>
-        public TableInfoForLiquid(TableInfo table)
+        public OtherInfoForLiquid()
         {
-            base.TableId = table.TableId;
-            base.TableName = table.TableName;
-            base.TableDescription = table.TableDescription;
         }
+
+        /// <summary>
+        /// (TW)資料表下的Key值欄位
+        /// </summary>
+        public string IndentityColumn { get; set; }
+
+        /// <summary>
+        /// (TW)資料表下的Key值欄位描述
+        /// </summary>
+        public string IndentityColumnDescription { get; set; }
+
 
         /// <summary>
         /// (TW)實作於Liquid下可用的參數
@@ -32,9 +38,8 @@ namespace CodeGen.Web.Models
             //定義Liquid使用的參數值
             return new
             {
-                TableId,
-                TableName,
-                TableDescription
+                IndentityColumn,
+                IndentityColumnDescription
             };
         }
     }
