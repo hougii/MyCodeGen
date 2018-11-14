@@ -27,9 +27,9 @@
         /// <summary>
         /// 取得該筆{{table.TableDescription}}
         /// </summary>
-        /// <param name="groupNo"></param>
+        /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
-        public {{table.TableName}} Get{{table.TableName}}(int groupNo){
+        public {{table.TableName}} Get{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}){
 			throw new NotImplementedException();
 		}
 
@@ -47,19 +47,19 @@
         /// <summary>
         /// 更新該筆{{table.TableDescription}}
         /// </summary>
-        /// <param name="groupNo"></param>
+        /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <param name="model"></param>
         /// <returns>成功/失敗</returns>
-        public bool Update{{table.TableName}}(int groupNo, {{table.TableName}} model){
+        public bool Update{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}, {{table.TableName}} model){
 			throw new NotImplementedException();
 		}
 
         /// <summary>
         /// 刪除該筆{{table.TableDescription}}
         /// </summary>
-        /// <param name="groupNo"></param>
+        /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
-        public bool Delete{{table.TableName}}(int groupNo){
+        public bool Delete{{table.TableName}}(int {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}){
 			throw new NotImplementedException();
 		}
 		#endregion

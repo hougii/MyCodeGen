@@ -29,13 +29,18 @@ namespace CodeGen.Web.Utility
         {
 
             var result = "";
-            var liquidPath = contentRootPath +LiquidPath;
+            var liquidPath = contentRootPath + LiquidPath;
 
             //(TW)使用Liquid的框架產生程式碼，傳入參數：table , columns
             var templateContent = File.ReadAllText(liquidPath, Encoding.UTF8);
             Template template = Template.Parse(templateContent);
             result = template.Render(Hash.FromAnonymousObject(
-                new { table = tableInfoForLiquid, columns = columnsForLiquid }));
+                new
+                {
+                    table = tableInfoForLiquid,
+                    columns = columnsForLiquid,
+                    other = otherInfoForLiquid
+                }));
 
             return result;
         }

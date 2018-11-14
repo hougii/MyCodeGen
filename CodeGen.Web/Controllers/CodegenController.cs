@@ -209,7 +209,7 @@ namespace CodeGen.Web.Controllers
 
                 var tableInfoForLiquid = new TableInfoForLiquid(tableInfo);
                 var columnInfosForLiquid = columnInfos.Select(m => new ColumnInfoForLiquid(m)).ToList();
-                var otherInfoForLiquid = new OtherInfoForLiquid();//TODO:
+                var otherInfoForLiquid = getOtherInfoForLiquid(tableInfoForLiquid, columnInfosForLiquid);
 
                 string fileContentSP = string.Empty;
                 string fileContentDbModel = string.Empty;
@@ -253,6 +253,24 @@ namespace CodeGen.Web.Controllers
             }
 
             return Json(resultCollectionDic);
+        }
+
+        /// <summary>
+        /// (TW)取得其它資訊內容
+        /// </summary>
+        /// <param name="tableInfoForLiquid"></param>
+        /// <param name="columnsForLiquid"></param>
+        /// <returns></returns>
+        private OtherInfoForLiquid getOtherInfoForLiquid(TableInfoForLiquid tableInfoForLiquid, List<ColumnInfoForLiquid> columnsForLiquid)
+        {
+            var result = new OtherInfoForLiquid();
+            var identityColumn = columnsForLiquid.FirstOrDefault();//暫以第一筆表示
+            if (identityColumn != null)
+            {
+                result.IndentityColumn = identityColumn.ColumnName;
+                result.IndentityColumnDescription = identityColumn.ColumnDescription;
+            }
+            return result;
         }
 
         #endregion
