@@ -93,7 +93,7 @@
                                     <div class="checkbox checkbox-success">
                                         <input id="chkc_{{$index+1}}" type="checkbox" ng-click="getColumn(itm,checkbox_status)" ng-model="checkbox_status" ng-true-value="true" ng-false-value="false" name="coList[]" class="ctcolumn">
                                         <label for="chkc_{{$index+1}}" href="">
-                                           {{itm.columnName}}
+                                            {{itm.columnName}}
                                         </label>
                                     </div>
                                 </td>
@@ -127,7 +127,7 @@
                 <div class="panel-body">
                     <div class="tab-struct custom-tab-2 mt-0">
                         <ul role="tablist" class="nav nav-tabs" id="myTabs_15">
-                            <li class="active" role="presentation">
+                            <li role="presentation" class="active">
                                 <a data-toggle="tab" id="views_tab_1" role="tab" href="#views" aria-expanded="false">HTML Views</a>
                             </li>
                             <li role="presentation" class="">
@@ -136,16 +136,19 @@
                             <li role="presentation" class="">
                                 <a data-toggle="tab" id="csharp_tab_1" role="tab" href="#csharp" aria-expanded="false">WebAPI</a>
                             </li>
-                            <li role="presentation" class="">
+                            <li role="presentation" class="active">
                                 <a data-toggle="tab" id="model_tab_1" role="tab" href="#model" aria-expanded="false">Model</a>
                             </li>
-                            <li class="" role="presentation">
+                            <li role="presentation" class="">
                                 <a aria-expanded="true" data-toggle="tab" role="tab" id="sql_tab_1" href="#sql">SQL</a>
                             </li>
+                            <li role="presentation" class="">
+                                <a aria-expanded="true" data-toggle="tab" role="tab" id="service_tab_1" href="#service">Service</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a aria-expanded="true" data-toggle="tab" role="tab" id="interface_tab_1" href="#interface">Interface</a>
+                            </li>
 
-                            <!--<li role="presentation" class="">
-                                <a data-toggle="tab" id="node_tab_1" role="tab" href="#node" aria-expanded="false">NodeJS</a>
-                            </li>-->
                         </ul>
                         <div class="tab-content" id="myTabContent_15">
                             <div id="views" class="tab-pane fade  active in" role="tabpanel" style="max-height:450px; overflow-y: auto;">
@@ -163,10 +166,12 @@
                             <div id="sql" class="tab-pane fade" role="tabpanel" style="max-height:450px; overflow-y: auto;">
                                 <pre class="pa-10" lang="sql"><xmp id="genCodeSql"></xmp></pre>
                             </div>
-
-                            <!--<div id="node" class="tab-pane fade" role="tabpanel" style="max-height:310px; overflow-y: auto;">
-                                <pre class="pa-10" lang="sql"><xmp id="genCodeNode"></xmp></pre>
-                            </div>-->
+                            <div id="service" class="tab-pane fade" role="tabpanel" style="max-height:450px; overflow-y: auto;">
+                                <pre class="pa-10" lang="cs"><xmp id="genCodeService"></xmp></pre>
+                            </div>
+                            <div id="interface" class="tab-pane fade" role="tabpanel" style="max-height:450px; overflow-y: auto;">
+                                <pre class="pa-10" lang="cs"><xmp id="genCodeInterface"></xmp></pre>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -110,6 +110,8 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         var elementIDVu = 'genCodeVu';
         var elementIDNg = 'genCodeAngular';
         var elementIDApi = 'genCodeAPI';
+        var elementIDService = 'genCodeService';
+        var elementIDInterface = 'genCodeInterface';
 
         if ($scope.collist.length > 0) {
             //20181112-howard-change post data content.
@@ -121,7 +123,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 contentType: 'application/json; charset=utf-8'
             }).then(function (response) {
 
-                $('#genCodeSql').text(''); $('#genCodeVm').text(''); $('#genCodeVu').text(''); $('#genCodeAngular').text(''); $('#genCodeAPI').text('');
+                $('#genCodeSql').text(''); $('#genCodeVm').text(''); $('#genCodeVu').text(''); $('#genCodeAngular').text(''); $('#genCodeAPI').text(''); $('#genCodeService').text(''); $('#genCodeInterface').text('');
 
                 //20181112-howard- change response data is dictionary fommat.
                 rowGen = response.data;
@@ -145,6 +147,14 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 //SQL
                 if (rowGen.hasOwnProperty("SP")) {
                     document.getElementById(elementIDSql).innerHTML += rowGen["SP"] + "\r\n" + "\r\n";
+                }
+                //Service
+                if (rowGen.hasOwnProperty("Service")) {
+                    document.getElementById(elementIDService).innerHTML += rowGen["Service"] + "\r\n" + "\r\n";
+                }
+                //Interface
+                if (rowGen.hasOwnProperty("Interface")) {
+                    document.getElementById(elementIDInterface).innerHTML += rowGen["Interface"] + "\r\n" + "\r\n";
                 }
             }, function (error) {
                 console.log(error);
