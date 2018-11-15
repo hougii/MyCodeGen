@@ -54,7 +54,7 @@ gulp.task("copy-all", ["copy-lib-css", "copy-lib-js"]);
 gulp.task('min-js', function () {
     gulp.src(['./app/**/*.js'])
         .pipe(concat('app.js'))
-        .pipe(uglify())
+        //.pipe(uglify()) //temp remove
         .pipe(gulp.dest(root_path.webroot))
 });
 

@@ -1,6 +1,6 @@
 <!-- Row -->
 <div class="row" style="overflow-x: auto;">
-    <div style="width:2000px" >
+    <div style="width:2000px">
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
             <div class="panel panel-default card-view">
                 <div class="panel-heading">
@@ -113,7 +113,9 @@
             <div class="panel panel-default card-view">
                 <div class="panel-heading">
                     <div class="pull-left">
-                        <input type="checkbox" id="enableMap">
+                        <div class="checkbox checkbox-success">
+                            <input type="checkbox" id="enableMap">
+                        </div>
                         <h6 class="panel-title txt-dark"><i class="zmdi zmdi-grid mr-20"></i> <label for="enableMap">Map Columns</label> </h6>
                     </div>
                     <div class="pull-right col-sm-4">
@@ -127,7 +129,7 @@
                             <tbody>
                                 <tr ng-repeat="itm in colmaplist | filter:search_clmmap">
                                     <td>{{itm.columnName}}</td>
-                                    <td><input type="text" ng-model="itm.mapColumnName"/></td>
+                                    <td><input type="text" ng-model="itm.mapColumnName" /></td>
                                     <td>{{itm.columnDescription}}</td>
                                 </tr>
                             </tbody>
@@ -146,7 +148,7 @@
             <div class="panel-heading">
                 <div class="pull-left">
                     <h6 class="panel-title txt-dark mt-10"><i class="zmdi zmdi-code mr-20"></i>Generated Code</h6>
-                    
+
                 </div>
                 <div class="pull-right">
                     <button type="button" class="btn btn-sm btn-danger pull-right pb-10 ml-5" ng-click="generateAllTable()"><strong>MD File</strong></button>

@@ -30,12 +30,14 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
     });
 
     GetAllDb();
+    
     function GetAllDb() {
         $http({
             method: 'GET',
             url: '/api/Codegen/GetDatabaseList'
         }).then(function successCallback(response) {
             $scope.dblist = response.data;
+            $scope.getMapColumn();
         }, function errorCallback(response) {
             console.log(response);
         });
@@ -57,13 +59,14 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             //(EN)get table list
             //(TW)註：response data的欄位名稱第一個字母會變小寫, why! ?
             $scope.tblist = response.data;
+            
         }, function errorCallback(response) {
             console.log(response);
         });
     };
 
     $scope.getAllTableColumn = function (table) {
-        
+
         $scope.dbModel = {
             DatabaseId: $scope.dbId,
             DatabaseName: $scope.dbname,
@@ -78,14 +81,16 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         }).then(function successCallback(response) {
             $scope.tableInfo = table;
             $scope.colist = response.data;
-            $scope.colmaplist = response.data;//暫
-            
+            //sort or append to map column
+            var tempcolist = $scope.colist.slice(0);
+            $scope.sortOrAppendMapColumns(tempcolist);
+
         }, function errorCallback(response) {
             console.log(response);
         });
     };
 
-    //頁面上Keep欄位資訊
+    //欄位勾選時的event
     $scope.getColumn = function (itm, status) {
         if (status) {
             var result = checkValue(itm.columnId, $scope.collist);
@@ -93,7 +98,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 $scope.collist.push({
                     ColumnId: itm.columnId,
                     ColumnName: itm.columnName,
-                    MapColumnName:'',
+                    MapColumnName: '',
                     DataType: itm.dataType,
                     MaxLength: itm.maxLength,
                     IsNullable: itm.isNullable,
@@ -110,8 +115,65 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         }
     };
 
+    $scope.getMapColumn = function () {
+        $http({
+            method: 'POST',
+            url: '/api/Codegen/GetMapColumns',
+            data: {}
+        }).then(function successCallback(response) {
+            $scope.colmaplist =JSON.parse(response.data);
+
+        }, function errorCallback(response) {
+            console.log(response);
+        });
+    };
+    $scope.saveMapColumn = function () {
+        $http({
+            method: 'POST',
+            url: '/api/Codegen/SaveMapColumns',
+            data: $scope.colmaplist
+        }).then(function successCallback(response) {
+
+        }, function errorCallback(response) {
+            console.log(response);
+        });
+    };
+    $scope.sortOrAppendMapColumns = function (colist) {
+        //note:use key value pair to save mapcolumns
+        //$scope.colmaplist
+        var tempColList = colist.reverse();//反轉
+        $(colist).each(function (i, col) {
+            var colname = col.columnName;
+            var coldesc = col.columnDescription;
+            //find element
+            var findElementIndex = 0;
+            var findElement = $scope.colmaplist.find((m, index) => {
+                if (m.columnName == colname) {
+                    findElementIndex = index;
+                }
+                return m.columnName == colname;
+            });
+            if (findElement!=null) {
+                //remove element
+                $scope.colmaplist.splice(findElementIndex, 1);
+                //update element
+                findElement.columnDescription = coldesc;
+                //add element to first
+                $scope.colmaplist.splice(0, 0, findElement);
+            }
+            else {
+                //add element to first
+                $scope.colmaplist.splice(0, 0, { columnName: colname, mapColumnName: '', columnDescription: coldesc });
+            }
+        });
+    };
+
+
     //產生程式碼
     $scope.generate = function () {
+
+        $scope.saveMapColumn();
+
         $('.nav-tabs a[href="#model"]').tab('show');
 
         var rowGen = [];
@@ -129,7 +191,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             $http({
                 method: 'POST',
                 url: '/api/Codegen/GenerateCode',
-                data: {table:$scope.tableInfo,columns:$scope.collist},
+                data: { table: $scope.tableInfo, columns: $scope.collist },
                 dataType: "json",
                 contentType: 'application/json; charset=utf-8'
             }).then(function (response) {

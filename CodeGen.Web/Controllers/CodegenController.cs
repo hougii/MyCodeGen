@@ -90,7 +90,26 @@ namespace CodeGen.Web.Controllers
             return getColumnsFromTable( dbName, tableName);
         }
 
+        [HttpPost, Route("GetMapColumns"), Produces("application/json")]
+        public IActionResult GetMapColumns([FromBody]vmParam model) {
+            var result = "";
+            string webRootPath = _hostingEnvironment.WebRootPath; //From web
+            var filePath = webRootPath + "\\template\\ColumnMap\\colmap.json";
+            var content = System.IO.File.ReadAllText(filePath, Encoding.UTF8);
+            result = content;
+            return Json(result);
+        }
 
+        [HttpPost, Route("SaveMapColumns"), Produces("application/json")]
+        public void SaveMapColumns([FromBody]object data)
+        {
+            string webRootPath = _hostingEnvironment.WebRootPath; //From web
+            var filePath = webRootPath + "\\template\\ColumnMap\\colmap.json";
+            System.IO.File.WriteAllText(filePath, string.Empty);
+            var content = JsonConvert.SerializeObject(data);   
+            System.IO.File.WriteAllText(filePath, content);
+
+        }
         #endregion
 
 
@@ -179,6 +198,23 @@ namespace CodeGen.Web.Controllers
             Dictionary<string, string> resultCollectionDic = new Dictionary<string, string>();
             var builder = new StringBuilder("");
             var fileContentMarkdown = "";
+
+            var markdownHeader = @"
+# 資料庫說明文件
+
+# 目錄
+
+[TOC]
+
+# 修訂歷程
+
+| Date       | Author | Version | Change Reference         |
+| ---------- | ------ | ------- | ------------------------ |
+|  |  |     |  |
+# 資料表設計
+
+";
+            builder.AppendLine(markdownHeader);
             try
             {
                 string webRootPath = _hostingEnvironment.WebRootPath; //From wwwroot
@@ -313,6 +349,8 @@ namespace CodeGen.Web.Controllers
             }
             return data.ToList();
         }
+
+        
 
         /// <summary>
         /// (TW)取得其它資訊內容
