@@ -89,10 +89,10 @@
                     <div class="panel-body row pa-0" style="height:190px; overflow-y: auto;">
                         <table class="table table-hover mb-0" id="checkboxes">
                             <tbody>
-                                <tr ng-repeat="itm in colist | filter:search_clm">
+                                <tr ng-repeat="itm in collist | filter:search_clm">
                                     <td class="pa-5 ma-0">
                                         <div class="checkbox checkbox-success">
-                                            <input id="chkc_{{$index+1}}" type="checkbox" ng-click="getColumn(itm,checkbox_status)" ng-model="checkbox_status" ng-true-value="true" ng-false-value="false" name="coList[]" class="ctcolumn">
+                                            <input id="chkc_{{$index+1}}" type="checkbox" ng-click="getColumn(itm,checkbox_status)" ng-model="checkbox_status" ng-true-value="true" ng-false-value="false" name="colList[]" class="ctcolumn">
                                             <label for="chkc_{{$index+1}}" href="">
                                                 {{itm.columnName}}
                                             </label>
@@ -112,10 +112,7 @@
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
             <div class="panel panel-default card-view">
                 <div class="panel-heading">
-                    <div class="pull-left">
-                        <div class="checkbox checkbox-success">
-                            <input type="checkbox" id="enableMap">
-                        </div>
+                    <div class="pull-left">                        
                         <h6 class="panel-title txt-dark"><i class="zmdi zmdi-grid mr-20"></i> <label for="enableMap">Map Columns</label> </h6>
                     </div>
                     <div class="pull-right col-sm-4">
@@ -130,7 +127,7 @@
                                 <tr ng-repeat="itm in colmaplist | filter:search_clmmap">
                                     <td>{{itm.columnName}}</td>
                                     <td><input type="text" ng-model="itm.mapColumnName" /></td>
-                                    <td>{{itm.columnDescription}}</td>
+                                    <td><input type="text" ng-model="itm.columnDescription" /></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -154,6 +151,12 @@
                     <button type="button" class="btn btn-sm btn-danger pull-right pb-10 ml-5" ng-click="generateAllTable()"><strong>MD File</strong></button>
                     <button type="button" class="btn btn-sm btn-warning pull-right pb-10 ml-5" clipboard supported="supported" text="dbname" on-copied="copySuccess()" on-error="copyFail(err)"><strong>copy</strong></button>
                     <button type="button" class="btn btn-sm btn-danger pull-right pb-10 ml-5" ng-click="generate()"><strong>GENERATE</strong></button>
+                    <div class="checkbox checkbox-success pull-right ">
+                        <input type="checkbox" id="enableMap" />
+                        <label for="enableMap">
+                            <strong>Enable Map Column</strong>
+                        </label>
+                    </div>
                 </div>
                 <div class="clearfix"></div>
             </div>

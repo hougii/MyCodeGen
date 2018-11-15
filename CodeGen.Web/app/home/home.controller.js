@@ -3,7 +3,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
 
     $scope.dbId = 0; $scope.dbname = null;
     $scope.tableInfo = null;
-    $scope.collist = [];
+    $scope.colselectedlist = [];
     $scope.isCheckAll = 0;
     $scope.colmaplist = [];
     $scope.copySuccess = function () {
@@ -14,23 +14,10 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         console.error('Error!', err);
     };
 
-    $("#checkAll").click(function () {
-        $('input:checkbox').not(this).prop('checked', this.checked);
-        var elm = $('#checkboxes input:checked[name="coList[]"]').map(function () { return $(this).val(); }).get();
-        var totalelm = elm.length;
-        if (totalelm > 0) {
-            for (var i = 1; i <= totalelm; i++) {
-                var el = document.getElementById('chkc_' + i);
-                angular.element(el).triggerHandler('click');
-            };
-        }
-        else {
-            $scope.collist = [];
-        };
-    });
+
 
     GetAllDb();
-    
+
     function GetAllDb() {
         $http({
             method: 'GET',
@@ -44,11 +31,15 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
     };
 
     $scope.getAllTable = function (itm) {
-        $scope.dbId = itm.databaseId; $scope.dbname = itm.databaseName;
+        $scope.dbId = itm.databaseId;
+        $scope.dbname = itm.databaseName;
         $scope.dbModel = {
             DatabaseId: itm.databaseId,
             DatabaseName: itm.databaseName
         };
+        //clear column list
+        $scope.collist = [];
+        $scope.colselectedlist = [];
 
         $http({
             method: 'POST',
@@ -59,7 +50,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             //(EN)get table list
             //(TW)註：response data的欄位名稱第一個字母會變小寫, why! ?
             $scope.tblist = response.data;
-            
+
         }, function errorCallback(response) {
             console.log(response);
         });
@@ -74,28 +65,46 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             TableName: table.tableName
         };
 
+        //clear column list
+        $scope.collist = [];
+        $scope.colselectedlist = [];
+
         $http({
             method: 'POST',
             url: '/api/Codegen/GetDatabaseTableColumnList',
             data: $scope.dbModel
         }).then(function successCallback(response) {
             $scope.tableInfo = table;
-            $scope.colist = response.data;
+            $scope.collist = response.data;
             //sort or append to map column
-            var tempcolist = $scope.colist.slice(0);
-            $scope.sortOrAppendMapColumns(tempcolist);
+            $scope.sortOrAppendMapColumns($scope.collist);
 
         }, function errorCallback(response) {
             console.log(response);
         });
     };
 
-    //欄位勾選時的event
+    $("#checkAll").click(function () {
+        $('#checkboxes input:checkbox').not(this).prop('checked', this.checked);
+        var elm = $('#checkboxes input:checked[name="colList[]"]').map(function () { return $(this).val(); }).get();
+        var totalelm = elm.length;
+        if (totalelm > 0) {
+            for (var i = 1; i <= totalelm; i++) {
+                var el = document.getElementById('chkc_' + i);
+                angular.element(el).triggerHandler('click');
+            };
+        }
+        else {
+            $scope.colselectedlist = [];
+        };
+    });
+
+    //each column when click, will trigger this event
     $scope.getColumn = function (itm, status) {
         if (status) {
-            var result = checkValue(itm.columnId, $scope.collist);
+            var result = checkValue(itm.columnId, $scope.colselectedlist);
             if (result == 'Not exist') {
-                $scope.collist.push({
+                $scope.colselectedlist.push({
                     ColumnId: itm.columnId,
                     ColumnName: itm.columnName,
                     MapColumnName: '',
@@ -109,9 +118,9 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             }
         }
         else {
-            var index = $scope.collist.indexOf(itm.ColumnId);
+            var index = $scope.colselectedlist.indexOf(itm.ColumnId);
             if (index > -1)
-                $scope.collist.splice(index, 1);
+                $scope.colselectedlist.splice(index, 1);
         }
     };
 
@@ -121,7 +130,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             url: '/api/Codegen/GetMapColumns',
             data: {}
         }).then(function successCallback(response) {
-            $scope.colmaplist =JSON.parse(response.data);
+            $scope.colmaplist = JSON.parse(response.data);
 
         }, function errorCallback(response) {
             console.log(response);
@@ -133,16 +142,14 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             url: '/api/Codegen/SaveMapColumns',
             data: $scope.colmaplist
         }).then(function successCallback(response) {
-
+            console.log('Save map column data success!');
         }, function errorCallback(response) {
             console.log(response);
         });
     };
-    $scope.sortOrAppendMapColumns = function (colist) {
-        //note:use key value pair to save mapcolumns
-        //$scope.colmaplist
-        var tempColList = colist.reverse();//反轉
-        $(colist).each(function (i, col) {
+    $scope.sortOrAppendMapColumns = function (collist) {
+        var tempColList = collist.slice(0).reverse();//clone array & reverse
+        $(tempColList).each(function (i, col) {
             var colname = col.columnName;
             var coldesc = col.columnDescription;
             //find element
@@ -153,11 +160,13 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 }
                 return m.columnName == colname;
             });
-            if (findElement!=null) {
+            if (findElement != null) {
                 //remove element
                 $scope.colmaplist.splice(findElementIndex, 1);
                 //update element
-                findElement.columnDescription = coldesc;
+                if (findElement.columnDescription == "") {
+                    findElement.columnDescription = coldesc;
+                }
                 //add element to first
                 $scope.colmaplist.splice(0, 0, findElement);
             }
@@ -186,12 +195,38 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         var elementIDInterface = 'genCodeInterface';
         var elementIDMarkdown = 'genCodeMarkdown';
 
-        if ($scope.collist.length > 0) {
-            //20181112-howard-change post data content.
+        if ($scope.colselectedlist.length == 0) {
+            rowGen = []; $('#genCodeSql').text(''); $('#genCodeVm').text('');
+            console.log("Please Choose a Column!!");
+        }
+        else {
+            var enableMap = $("#enableMap").is(":checked");
+
+            //Fill mapColumn data
+            angular.forEach($scope.colselectedlist,function (item,i) {
+                var colname = item.ColumnName;
+                var coldesc = item.ColumnDescription;
+                var orgdesc = item.OrgColumnDescription;
+                var mapcolumn = $scope.colmaplist.find((elem) => elem.columnName == colname);
+                item.MapColumnName = colname;
+                item.ColumnDescription = (orgdesc != null) ? orgdesc : coldesc;
+                if (enableMap && mapcolumn != null) {
+                    var mapColumnName = mapcolumn.mapColumnName;
+                    var mapDesc = mapcolumn.columnDescription;
+                    item.MapColumnName = mapColumnName;
+                    item.ColumnDescription = mapDesc;
+                    item.OrgColumnDescription = (orgdesc != null) ? orgdesc : coldesc;
+                }
+            });
+
+
             $http({
                 method: 'POST',
                 url: '/api/Codegen/GenerateCode',
-                data: { table: $scope.tableInfo, columns: $scope.collist },
+                data: {
+                    table: $scope.tableInfo,
+                    columns: $scope.colselectedlist
+                },
                 dataType: "json",
                 contentType: 'application/json; charset=utf-8'
             }).then(function (response) {
@@ -236,14 +271,10 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             }, function (error) {
                 console.log(error);
             });
-        }
-        else {
-            rowGen = []; $('#genCodeSql').text(''); $('#genCodeVm').text('');
-            console.log("Please Choose a Column!!");
         };
     };
 
-
+    //when click gen Markdown file,will trigger this.
     $scope.generateAllTable = function () {
         $('.nav-tabs a[href="#markdown"]').tab('show');
         if ($scope.dbModel == null) {
@@ -252,10 +283,14 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         }
         var rowGen = [];
         var elementIDMarkdown = 'genCodeMarkdown';
+        var enableMap = $("#enableMap").is(":checked");
         $http({
             method: 'POST',
             url: '/api/Codegen/GenerateAllTable',
-            data: { database: $scope.dbModel }
+            data: {
+                database: $scope.dbModel,
+                enableMap: enableMap
+            }
         }).then(function successCallback(response) {
             $("#genCodeMarkdown").text("");
 
@@ -272,7 +307,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
 
 
     $scope.reset = function () {
-        $scope.collist = []; rowGen = [];
+        $scope.colselectedlist = []; rowGen = [];
         $('#genCodeSql').text(''); $('#genCodeVm').text('');
     };
 

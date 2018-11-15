@@ -6,6 +6,6 @@
         {% for column in columns %}
         /// <summary>{{column.ColumnDescription}}</summary>
         [Display(Name = "{{column.ColumnDescription}}")]
-        public {{column.ModelType}} {{column.ColumnName}} { get; set; }
+        public {{column.ModelType}} {{column.MapColumnName}} { get; set; }
         {%- endfor -%}
     }

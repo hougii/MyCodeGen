@@ -123,7 +123,7 @@ namespace CodeGen.Web.Controllers
         // api/Codegen/GenerateCode
         [HttpPost, Route("GenerateCode"), Produces("application/json")]
         public IActionResult GenerateCode([FromBody]object data)
-        {
+        {   
             Dictionary<string, string> resultCollectionDic = new Dictionary<string, string>();
             try
             {
@@ -133,6 +133,7 @@ namespace CodeGen.Web.Controllers
                 var postData = JsonConvert.DeserializeObject<dynamic>(data.ToString());
                 var tableJson = postData.table;
                 var columnsJson = postData.columns;
+                
 
                 //(TW)取得Table資訊
                 var tableInfo = JsonConvert.DeserializeObject<TableInfo>(tableJson.ToString());
@@ -222,6 +223,7 @@ namespace CodeGen.Web.Controllers
 
                 var postData = JsonConvert.DeserializeObject<dynamic>(data.ToString());
                 var databaseJson = postData.database;
+                bool enableMap = Convert.ToBoolean(postData.enableMap);
                 string dbName = databaseJson.DatabaseName;
 
                 List<TableInfo> tableInfo = getAllTableFromDb(dbName);

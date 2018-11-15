@@ -1,8 +1,8 @@
 ﻿<form name='form{{table.TableName}}'>
 {%- for column in columns -%}
   <div class='form-group'>
-    <label for='{{column.ColumnName}}' class='control-label'>{{column.ColumnDescription}}</label>
-    <input type='text' class='form-control' ng-model='vmModel.{{column.ColumnName}}' name='{{column.ColumnName}}' />
+    <label for='{{column.MapColumnName}}' class='control-label'>{{column.ColumnDescription}}</label>
+    <input type='text' class='form-control' ng-model='vmModel.{{column.MapColumnName}}' name='{{column.MapColumnName}}' />
   </div>
 {%- endfor -%}
   
