@@ -12,6 +12,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
 
     $scope.copyFail = function (err) {
         console.error('Error!', err);
+        alert("Error!! to see console log");
     };
 
 
@@ -27,6 +28,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             $scope.getMapColumn();
         }, function errorCallback(response) {
             console.log(response);
+            alert("Error!! to see console log");
         });
     };
 
@@ -40,6 +42,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         //clear column list
         $scope.collist = [];
         $scope.colselectedlist = [];
+        $('#checkAll').prop('checked', false);
 
         $http({
             method: 'POST',
@@ -53,6 +56,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
 
         }, function errorCallback(response) {
             console.log(response);
+            alert("Error!! to see console log");
         });
     };
 
@@ -68,6 +72,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         //clear column list
         $scope.collist = [];
         $scope.colselectedlist = [];
+        $('#checkAll').prop('checked', false);
 
         $http({
             method: 'POST',
@@ -77,10 +82,11 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             $scope.tableInfo = table;
             $scope.collist = response.data;
             //sort or append to map column
-            $scope.sortOrAppendMapColumns($scope.collist);
+            $scope.sortOrAppendMapColumns($scope.tableInfo, $scope.collist);
 
         }, function errorCallback(response) {
             console.log(response);
+            alert("Error!! to see console log");
         });
     };
 
@@ -134,6 +140,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
 
         }, function errorCallback(response) {
             console.log(response);
+            alert("Error!! to see console log");
         });
     };
     $scope.saveMapColumn = function () {
@@ -145,10 +152,16 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             console.log('Save map column data success!');
         }, function errorCallback(response) {
             console.log(response);
+            alert("Error!! to see console log");
         });
     };
-    $scope.sortOrAppendMapColumns = function (collist) {
+    $scope.sortOrAppendMapColumns = function (table, collist) {
+        var tempTable = Object.assign({}, table);
         var tempColList = collist.slice(0).reverse();//clone array & reverse
+
+        //add table info to tempColList (because need table rename mapping)
+        tempColList.push({ columnName: tempTable.tableName, columnDescription: tempTable.tableDescription});
+
         $(tempColList).each(function (i, col) {
             var colname = col.columnName;
             var coldesc = col.columnDescription;
@@ -198,6 +211,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         if ($scope.colselectedlist.length == 0) {
             rowGen = []; $('#genCodeSql').text(''); $('#genCodeVm').text('');
             console.log("Please Choose a Column!!");
+            alert("Please Choose a Column!!");
         }
         else {
             var enableMap = $("#enableMap").is(":checked");
@@ -218,6 +232,21 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                     item.OrgColumnDescription = (orgdesc != null) ? orgdesc : coldesc;
                 }
             });
+            //Fill Table mapping data
+            var table = $scope.tableInfo;
+            var tablename = table.tableName;
+            var tabledesc = table.tableDescription;
+            var orgtabledesc = table.orgColumnDescription;
+            var maptable = $scope.colmaplist.find((elem) => elem.columnName == tablename);
+            table.mapTableName = tablename;
+            table.tableDescription = (orgtabledesc != null) ? orgtabledesc : tabledesc;
+            if (enableMap && maptable != null) {
+                var mapTableName = maptable.mapColumnName;
+                var mapDesc = maptable.columnDescription;
+                table.mapTableName= mapTableName;
+                table.tableDescription = mapDesc;
+                table.orgColumnDescription = (orgtabledesc != null) ? orgtabledesc : tabledesc;
+            }
 
 
             $http({
@@ -270,6 +299,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 }
             }, function (error) {
                 console.log(error);
+                alert("Error!! to see console log");
             });
         };
     };
@@ -279,6 +309,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         $('.nav-tabs a[href="#markdown"]').tab('show');
         if ($scope.dbModel == null) {
             console.log("Please Choose a Database!!");
+            alert("Please Choose a Database!!");
             return;
         }
         var rowGen = [];
@@ -302,6 +333,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             }
         }, function errorCallback(response) {
             console.log(response);
+            alert("Error!! to see console log");
         });
     };
 

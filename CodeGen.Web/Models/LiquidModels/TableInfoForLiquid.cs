@@ -20,6 +20,7 @@ namespace CodeGen.Web.Models
         {
             base.TableId = table.TableId;
             base.TableName = table.TableName;
+            base.MapTableName = table.MapTableName;
             base.TableDescription = table.TableDescription;
         }
 
@@ -34,6 +35,7 @@ namespace CodeGen.Web.Models
             {
                 TableId,
                 TableName,
+                MapTableName,
                 TableDescription
             };
         }

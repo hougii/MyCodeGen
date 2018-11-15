@@ -2,9 +2,9 @@
     /// 針對{{table.TableDescription}}提供的相關服務
     /// </summary>
     [ServiceContract]
-    public interface I{{table.TableName}}Service
+    public interface I{{table.MapTableName}}Service
     {
-        #region {{table.TableDescription}}相關({{table.TableName}})
+        #region {{table.TableDescription}}相關({{table.MapTableName}})
          
         /// <summary>
         /// 依條件取得{{table.TableDescription}}資訊
@@ -12,7 +12,7 @@
         /// <param name="condition">條件</param>
         /// <returns></returns>
         [OperationContract]
-        IEnumerable<{{table.TableName}}> Query{{table.TableName}}ByCondition({{table.TableName}}Condition condition);
+        IEnumerable<{{table.MapTableName}}> Query{{table.MapTableName}}ByCondition({{table.MapTableName}}Condition condition);
 
 
         /// <summary>
@@ -20,7 +20,7 @@
         /// </summary>
         /// <returns></returns>
         [OperationContract]
-        IEnumerable<{{table.TableName}}> GetAll{{table.TableName}}();
+        IEnumerable<{{table.MapTableName}}> GetAll{{table.MapTableName}}();
 
 
         /// <summary>
@@ -29,7 +29,7 @@
         /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
         [OperationContract]
-        {{table.TableName}} Get{{table.TableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}});
+        {{table.MapTableName}} Get{{table.MapTableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}});
 
 
         #region {{table.TableDescription}}維護
@@ -39,7 +39,7 @@
         /// <param name="model"></param>
         /// <returns>建立完成後的Model(包括流水號)</returns>
         [OperationContract]
-        {{table.TableName}} Create{{table.TableName}}({{table.TableName}} model);
+        {{table.MapTableName}} Create{{table.MapTableName}}({{table.MapTableName}} model);
 
         /// <summary>
         /// 更新該筆{{table.TableDescription}}
@@ -48,7 +48,7 @@
         /// <param name="model"></param>
         /// <returns>成功/失敗</returns>
         [OperationContract]
-        bool Update{{table.TableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}, {{table.TableName}} model);
+        bool Update{{table.MapTableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}, {{table.MapTableName}} model);
 
         /// <summary>
         /// 刪除該筆{{table.TableDescription}}
@@ -56,7 +56,7 @@
         /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
         [OperationContract]
-        bool Delete{{table.TableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}});
+        bool Delete{{table.MapTableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}});
         #endregion
         #endregion
 

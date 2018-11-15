@@ -1,4 +1,4 @@
-﻿app.controller('{{table.TableName}}Controller', ['$scope', '$http', function ($scope, $http) {
+﻿app.controller('{{table.MapTableName}}Controller', ['$scope', '$http', function ($scope, $http) {
     $scope.vmModel = {};
 
     //******=========Get All=========******
@@ -6,7 +6,7 @@
     function GetAll() {
         $http({
             method: 'GET',
-            url: '/api/{{table.TableName}}/GetAll'
+            url: '/api/{{table.MapTableName}}/GetAll'
         }).then(function (response) {
            console.log(response.data);
         }, function (response) {
@@ -18,7 +18,7 @@
     $scope.GetById = function (model) {
         $http({
             method: 'GET',
-            url: '/api/{{table.TableName}}/GetById/'+ parseInt(model.id)
+            url: '/api/{{table.MapTableName}}/GetById/'+ parseInt(model.id)
         }).then(function (response) {
            $scope.vmModel = response.data;
         }, function (error) {
@@ -30,7 +30,7 @@
     $scope.Save = function () {
         $http({
             method: 'POST',
-            url: '/api/{{table.TableName}}/Save',
+            url: '/api/{{table.MapTableName}}/Save',
             data: $scope.vmModel
         }).then(function (response) {
             $scope.reset();
@@ -44,7 +44,7 @@
     $scope.Update = function () {
         $http({
             method: 'PUT',
-            url: '/api/{{table.TableName}}/UpdateById/'+ parseInt(model.id),
+            url: '/api/{{table.MapTableName}}/UpdateById/'+ parseInt(model.id),
             data: $scope.vmModel
         }).then(function (response) {
             $scope.reset();
@@ -60,7 +60,7 @@
         if (IsConf) {
             $http({
                 method: 'DELETE',
-                url: '/api/{{table.TableName}}/DeleteById/'+ parseInt(model.id),
+                url: '/api/{{table.MapTableName}}/DeleteById/'+ parseInt(model.id),
             }).then(function (response) {
                 $scope.reset();
                 GetAll();

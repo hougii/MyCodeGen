@@ -23,6 +23,7 @@ namespace CodeGen.Web.Models
         /// </summary>
         public string TableName { get; set; }
 
+        public string MapTableName { get; set; }
         /// <summary>
         /// Table Description
         /// </summary>

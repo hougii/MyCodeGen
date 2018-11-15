@@ -2,44 +2,44 @@
 /// <summary>
 /// {{table.TableDescription}} 相關的API服務
 /// </summary>
-[Route("api/{{table.TableName}}"), Produces("application/json")]
-public class {{table.TableName}}Controller : Controller
+[Route("api/{{table.MapTableName}}"), Produces("application/json")]
+public class {{table.MapTableName}}Controller : Controller
 {
     private dbContext _ctx = null;
-    public {{table.TableName}}Controller(dbContext context)
+    public {{table.MapTableName}}Controller(dbContext context)
     {
         _ctx = context;
     }
 
-    // GET: api/{{table.TableName}}/GetAll
+    // GET: api/{{table.MapTableName}}/GetAll
     [HttpGet, Route("GetAll")]
     public async Task<object> GetAll()
     {
-        List<{{table.TableName}}> {{table.TableName}}s = null;
+        List<{{table.MapTableName}}> {{table.MapTableName}}s = null;
         try
         {
             using (_ctx)
             {
-                {{table.TableName}}s = await _ctx.{{table.TableName}}.ToListAsync();
+                {{table.MapTableName}}s = await _ctx.{{table.MapTableName}}.ToListAsync();
             }
         }
         catch (Exception ex)
         {
             ex.ToString();
         }
-        return {{table.TableName}}s;
+        return {{table.MapTableName}}s;
     }
 
-    // GET api/{{table.TableName}}/GetById/5
+    // GET api/{{table.MapTableName}}/GetById/5
     [HttpGet, Route("GetById/{id}")]
-    public async Task<{{table.TableName}}> GetById(int id)
+    public async Task<{{table.MapTableName}}> GetById(int id)
     {
-        {{table.TableName}} obj = null;
+        {{table.MapTableName}} obj = null;
         try
         {
             using (_ctx)
             {
-                obj = await _ctx.{{table.TableName}}.FirstOrDefaultAsync(x => x.Id == id);
+                obj = await _ctx.{{table.MapTableName}}.FirstOrDefaultAsync(x => x.Id == id);
             }
         }
         catch (Exception ex)
@@ -50,9 +50,9 @@ public class {{table.TableName}}Controller : Controller
     }
 
 
-    // POST api/{{table.TableName}}/Save 
+    // POST api/{{table.MapTableName}}/Save 
     [HttpPost, Route("Save")]
-    public async Task<object> Save([FromBody]{{table.TableName}} model)
+    public async Task<object> Save([FromBody]{{table.MapTableName}} model)
     {
         object result = null; 
         string message = "";
@@ -66,7 +66,7 @@ public class {{table.TableName}}Controller : Controller
             {
                 try
                 {
-                    _ctx.{{table.TableName}}.Add(model);
+                    _ctx.{{table.MapTableName}}.Add(model);
                     await _ctx.SaveChangesAsync();
                     _ctxTransaction.Commit();
                     message = "Ok";
@@ -87,9 +87,9 @@ public class {{table.TableName}}Controller : Controller
         return result;
     }
 
-    // PUT api/{{table.TableName}}/UpdateById/5 
+    // PUT api/{{table.MapTableName}}/UpdateById/5 
     [HttpPut, Route("UpdateById/{id}")]
-    public async Task<object> UpdateById(int id, [FromBody]{{table.TableName}} model)
+    public async Task<object> UpdateById(int id, [FromBody]{{table.MapTableName}} model)
     {
         object result = null; string message = string.Empty;
         if (model == null)
@@ -102,7 +102,7 @@ public class {{table.TableName}}Controller : Controller
             {
                 try
                 {
-                    var entityUpdate = _ctx.{{table.TableName}}.FirstOrDefault(x => x.Id == id);
+                    var entityUpdate = _ctx.{{table.MapTableName}}.FirstOrDefault(x => x.Id == id);
                     if (entityUpdate != null)
                     {
                         
@@ -134,7 +134,7 @@ public class {{table.TableName}}Controller : Controller
         return result;
     }
 
-    // DELETE api/{{table.TableName}}/DeleteById/5
+    // DELETE api/{{table.MapTableName}}/DeleteById/5
     [HttpDelete, Route("DeleteById/{id}")]
     public async Task<object> DeleteById(int id)
     {
@@ -145,10 +145,10 @@ public class {{table.TableName}}Controller : Controller
             {
                 try
                 {
-                    var idToRemove = _ctx.{{table.TableName}}.SingleOrDefault(x => x.Id == id);
+                    var idToRemove = _ctx.{{table.MapTableName}}.SingleOrDefault(x => x.Id == id);
                     if (idToRemove != null)
                     {
-                        _ctx.{{table.TableName}}.Remove(idToRemove);
+                        _ctx.{{table.MapTableName}}.Remove(idToRemove);
                         await _ctx.SaveChangesAsync();
                     }
                     _ctxTransaction.Commit();
