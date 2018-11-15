@@ -122,6 +122,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         var elementIDApi = 'genCodeAPI';
         var elementIDService = 'genCodeService';
         var elementIDInterface = 'genCodeInterface';
+        var elementIDMarkdown = 'genCodeMarkdown';
 
         if ($scope.collist.length > 0) {
             //20181112-howard-change post data content.
@@ -133,7 +134,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 contentType: 'application/json; charset=utf-8'
             }).then(function (response) {
 
-                $('#genCodeSql').text(''); $('#genCodeVm').text(''); $('#genCodeVu').text(''); $('#genCodeAngular').text(''); $('#genCodeAPI').text(''); $('#genCodeService').text(''); $('#genCodeInterface').text('');
+                $('#genCodeSql').text(''); $('#genCodeVm').text(''); $('#genCodeVu').text(''); $('#genCodeAngular').text(''); $('#genCodeAPI').text(''); $('#genCodeService').text(''); $('#genCodeInterface').text(''); $('#genCodeMarkdown').text('');
 
                 //20181112-howard- change response data is dictionary fommat.
                 rowGen = response.data;
@@ -166,6 +167,10 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 if (rowGen.hasOwnProperty("Interface")) {
                     document.getElementById(elementIDInterface).innerHTML += rowGen["Interface"] + "\r\n" + "\r\n";
                 }
+                //Markdown
+                if (rowGen.hasOwnProperty("Markdown")) {
+                    document.getElementById(elementIDMarkdown).innerHTML += rowGen["Markdown"] + "\r\n" + "\r\n";
+                }
             }, function (error) {
                 console.log(error);
             });
@@ -175,6 +180,35 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             console.log("Please Choose a Column!!");
         };
     };
+
+
+    $scope.generateAllTable = function () {
+        $('.nav-tabs a[href="#markdown"]').tab('show');
+        if ($scope.dbModel == null) {
+            console.log("Please Choose a Database!!");
+            return;
+        }
+        var rowGen = [];
+        var elementIDMarkdown = 'genCodeMarkdown';
+        $http({
+            method: 'POST',
+            url: '/api/Codegen/GenerateAllTable',
+            data: { database: $scope.dbModel }
+        }).then(function successCallback(response) {
+            $("#genCodeMarkdown").text("");
+
+            rowGen = response.data;
+
+            //Markdown
+            if (rowGen.hasOwnProperty("Markdown")) {
+                document.getElementById(elementIDMarkdown).innerHTML += rowGen["Markdown"] + "\r\n";
+            }
+        }, function errorCallback(response) {
+            console.log(response);
+        });
+    };
+
+
     $scope.reset = function () {
         $scope.collist = []; rowGen = [];
         $('#genCodeSql').text(''); $('#genCodeVm').text('');

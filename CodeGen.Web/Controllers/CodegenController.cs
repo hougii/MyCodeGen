@@ -68,55 +68,13 @@ namespace CodeGen.Web.Controllers
         [HttpPost, Route("GetDatabaseTableList"), Produces("application/json")]
         public List<TableInfo> GetDatabaseTableList([FromBody]vmParam model)
         {
-            List<TableInfo> data = new List<TableInfo>();
-            string conString_ = _conString + " Database=" + model.DatabaseName + ";";
-            using (SqlConnection con = new SqlConnection(conString_))
-            {
-                int count = 0;
-                con.Open();
-                var sql = @"
-            select st.TABLE_SCHEMA as TableSchema,st.TABLE_NAME as TableName,ep.value as [Description] 
-                from INFORMATION_SCHEMA.TABLES st
-                OUTER APPLY fn_listextendedproperty(default,
-                                    'SCHEMA', TABLE_SCHEMA,
-                                    'TABLE', TABLE_NAME, null, null) ep
-            where st.TABLE_TYPE='BASE TABLE'";
-
-                using (SqlCommand cmd = new SqlCommand(sql, con))
-                {
-                    using (IDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            ++count;
-                            data.Add(new TableInfo
-                            {
-                                TableId = count,
-                                TableSchema = Convert.ToString(reader["TableSchema"]),
-                                TableName = Convert.ToString(reader["TableName"]),
-                                TableDescription = Convert.ToString(reader["Description"])
-                            });
-                        }
-                    }
-                }
-
-#if false //old code
-                DataTable schema = con.GetSchema("Tables");//(TW)原程式:資訊太少
-                foreach (DataRow row in schema.Rows)
-                {
-                    count++;
-                    data.Add(new TableInfo()
-                    {
-                        TableId = count,
-                        TableName = row[2].ToString()
-                    });
-                }
-#endif
-            }
+            var dbName = model.DatabaseName;
+            List<TableInfo> data = getAllTableFromDb(dbName);
 
             return data.ToList();
         }
 
+       
         /// <summary>
         /// 取得Database下指定Table的欄位資訊
         /// </summary>
@@ -127,57 +85,12 @@ namespace CodeGen.Web.Controllers
         [HttpPost, Route("GetDatabaseTableColumnList"), Produces("application/json")]
         public List<ColumnInfo> GetDatabaseTableColumnList([FromBody]vmParam model)
         {
-            List<ColumnInfo> data = new List<ColumnInfo>();
-            string conString_ = _conString + " Database=" + model.DatabaseName + ";";
-            using (SqlConnection con = new SqlConnection(conString_))
-            {
-                int count = 0; con.Open();
-                //20181108-howard fix:改寫取得Column的資訊語法
-                //          --加上column 描述語法
-                //var sql = @"SELECT COLUMN_NAME, DATA_TYPE, ISNULL(CHARACTER_MAXIMUM_LENGTH,0), IS_NULLABLE, TABLE_SCHEMA FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName ORDER BY ORDINAL_POSITION";
-                var sql = @" select 
-	        st.name [Table],
-	        sc.name [Column],
-	        sep.value as [Description],
-		info.DATA_TYPE as [ColumnType],
-		ISNULL(info.CHARACTER_MAXIMUM_LENGTH,0) as [Length], 
-		info.IS_NULLABLE as [Nullable], --get[YES/NO]word.
-		info.TABLE_SCHEMA as [Schema]
-    from sys.tables st  --此資料庫下的Table
-    inner join sys.columns sc on st.object_id = sc.object_id
-    left join sys.extended_properties sep on st.object_id = sep.major_id
-                                         and sc.column_id = sep.minor_id
-                                         and sep.name = 'MS_Description'
-   left join INFORMATION_SCHEMA.COLUMNS info on st.name= info.TABLE_NAME
-					 and sc.name = info.COLUMN_NAME
-    where st.name = @TableName
-";
-                using (SqlCommand cmd = new SqlCommand(sql, con))
-                {
-                    //20181108-howard fix:改寫改用parameter的方式處理
-                    cmd.Parameters.AddWithValue("TableName", model.TableName);
-                    using (IDataReader dr = cmd.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            count++;
-                            data.Add(new ColumnInfo()
-                            {
-                                ColumnId = count,
-                                ColumnName = dr["Column"].ToString(),
-                                DataType = dr["ColumnType"].ToString(),
-                                MaxLength = Convert.ToInt32(dr["Length"].ToString()),
-                                IsNullable = (dr["Nullable"].ToString() == "YES") ? true : false,
-                                TableName = model.TableName.ToString(),
-                                TableSchema = dr["Schema"].ToString(),
-                                ColumnDescription = dr["Description"].ToString()
-                            });
-                        }
-                    }
-                }
-            }
-            return data.ToList();
+            var dbName = model.DatabaseName;
+            var tableName = model.TableName;
+            return getColumnsFromTable( dbName, tableName);
         }
+
+
         #endregion
 
 
@@ -218,6 +131,7 @@ namespace CodeGen.Web.Controllers
                 string fileContentAPI = string.Empty;
                 string fileContentService = string.Empty;
                 string fileContentInterface = string.Empty;
+                string fileContentMarkdown = "";
 
                 //SP
                 fileContentSP = new SpGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
@@ -246,6 +160,10 @@ namespace CodeGen.Web.Controllers
                 //Interface
                 fileContentAPI = new InterfaceGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
                 resultCollectionDic.Add("Interface", fileContentAPI);
+
+                //Markdown
+                fileContentMarkdown = new MarkdownGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                resultCollectionDic.Add("Markdown", fileContentMarkdown);
             }
             catch (Exception ex)
             {
@@ -253,6 +171,147 @@ namespace CodeGen.Web.Controllers
             }
 
             return Json(resultCollectionDic);
+        }
+
+        [HttpPost, Route("GenerateAllTable"), Produces("application/json")]
+        public IActionResult GenerateAllTable([FromBody]object data)
+        {
+            Dictionary<string, string> resultCollectionDic = new Dictionary<string, string>();
+            var builder = new StringBuilder("");
+            var fileContentMarkdown = "";
+            try
+            {
+                string webRootPath = _hostingEnvironment.WebRootPath; //From wwwroot
+                string contentRootPath = _hostingEnvironment.ContentRootPath; //From Others
+
+                var postData = JsonConvert.DeserializeObject<dynamic>(data.ToString());
+                var databaseJson = postData.database;
+                string dbName = databaseJson.DatabaseName;
+
+                List<TableInfo> tableInfo = getAllTableFromDb(dbName);
+
+                foreach (TableInfo table in tableInfo) {
+                    var tableName = table.TableName;
+                    List<ColumnInfo> columnInfos = getColumnsFromTable(dbName, tableName);
+
+                    var tableInfoForLiquid = new TableInfoForLiquid(table);
+                    var columnInfosForLiquid = columnInfos.Select(m => new ColumnInfoForLiquid(m)).ToList();
+                    var otherInfoForLiquid = getOtherInfoForLiquid(tableInfoForLiquid, columnInfosForLiquid);
+
+                    //Markdown
+                    fileContentMarkdown = new MarkdownGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                    builder.AppendLine(fileContentMarkdown);
+                }
+
+                resultCollectionDic.Add("Markdown", builder.ToString());
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+            }
+            return Json(resultCollectionDic);
+        }
+
+        /// <summary>
+        /// Get All Tables From Database
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <returns></returns>
+        private List<TableInfo> getAllTableFromDb(string dbName)
+        {
+            List<TableInfo> data = new List<TableInfo>();
+            string conString_ = _conString + " Database=" + dbName + ";";
+            using (SqlConnection con = new SqlConnection(conString_))
+            {
+                int count = 0;
+                con.Open();
+                var sql = @"
+            select st.TABLE_SCHEMA as TableSchema,st.TABLE_NAME as TableName,ep.value as [Description] 
+                from INFORMATION_SCHEMA.TABLES st
+                OUTER APPLY fn_listextendedproperty(default,
+                                    'SCHEMA', TABLE_SCHEMA,
+                                    'TABLE', TABLE_NAME, null, null) ep
+            where st.TABLE_TYPE='BASE TABLE'";
+
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    using (IDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ++count;
+                            data.Add(new TableInfo
+                            {
+                                TableId = count,
+                                TableSchema = Convert.ToString(reader["TableSchema"]),
+                                TableName = Convert.ToString(reader["TableName"]),
+                                TableDescription = Convert.ToString(reader["Description"])
+                            });
+                        }
+                    }
+                }
+            }
+            return data;
+        }
+        /// <summary>
+        /// (EN)Get Columns From Table
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        private List<ColumnInfo> getColumnsFromTable(string dbName, string tableName)
+        {
+            List<ColumnInfo> data = new List<ColumnInfo>();
+            string conString_ = _conString + " Database=" + dbName + ";";
+            using (SqlConnection con = new SqlConnection(conString_))
+            {
+                int count = 0;
+                con.Open();
+                //20181108-howard fix:改寫取得Column的資訊語法
+                //          --加上column 描述語法
+                //var sql = @"SELECT COLUMN_NAME, DATA_TYPE, ISNULL(CHARACTER_MAXIMUM_LENGTH,0), IS_NULLABLE, TABLE_SCHEMA FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName ORDER BY ORDINAL_POSITION";
+                var sql = @" select 
+	        st.name [Table],
+	        sc.name [Column],
+	        sep.value as [Description],
+		info.DATA_TYPE as [ColumnType],
+		ISNULL(info.CHARACTER_MAXIMUM_LENGTH,0) as [Length], 
+		info.IS_NULLABLE as [Nullable], --get[YES/NO]word.
+		info.TABLE_SCHEMA as [Schema]
+    from sys.tables st  --此資料庫下的Table
+    inner join sys.columns sc on st.object_id = sc.object_id
+    left join sys.extended_properties sep on st.object_id = sep.major_id
+                                         and sc.column_id = sep.minor_id
+                                         and sep.name = 'MS_Description'
+   left join INFORMATION_SCHEMA.COLUMNS info on st.name= info.TABLE_NAME
+					 and sc.name = info.COLUMN_NAME
+    where st.name = @TableName
+";
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    //20181108-howard fix:改寫改用parameter的方式處理
+                    cmd.Parameters.AddWithValue("TableName", tableName);
+                    using (IDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            count++;
+                            data.Add(new ColumnInfo()
+                            {
+                                ColumnId = count,
+                                ColumnName = dr["Column"].ToString(),
+                                DataType = dr["ColumnType"].ToString(),
+                                MaxLength = Convert.ToInt32(dr["Length"].ToString()),
+                                IsNullable = (dr["Nullable"].ToString() == "YES") ? true : false,
+                                TableName = tableName,
+                                TableSchema = dr["Schema"].ToString(),
+                                ColumnDescription = dr["Description"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return data.ToList();
         }
 
         /// <summary>
