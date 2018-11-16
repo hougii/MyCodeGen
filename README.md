@@ -55,11 +55,15 @@ see this page： [建置手冊.md](https://github.com/hougii/MyCodeGen/blob/mast
 
 ## Liquid Variable
 
-| Type     | Table Info                                                   | Column Info | Other Info |
-| -------- | ------------------------------------------------------------ | ----------- | ---------- |
-| variable | TableId<br />TableName<br />MapTableName<br />TableDescription |             |            |
-| Sample   | {{table.MapTableName}}                                       |             |            |
-| memo     | can see "TableInfoForLiquid.cs"                              |             |            |
+when you define template, the default variable is contain : [table , columns , other ]
+
+each model's property  information:
+
+| Type     | Table Info                                                   | Column Info                                                  | Other Info                                                   |
+| -------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| variable | TableId<br />TableName<br />MapTableName<br />TableDescription | ColumnId,<br />ColumnName,<br />MapColumnName,<br />ColumnDescription,<br />DataType,<br />ModelType,<br />MaxLength, | IndentityColumn<br />IndentityModelType<br />IndentityColumnDescription |
+| Sample   | {{table.MapTableName}}                                       | {{column.ColumnName}}                                        | {{other.IndentityColumn}}                                    |
+| memo     | can see "TableInfoForLiquid.cs"<br />under the "LiquidModels" folder | can see "ColumnInfoForLiquid.cs"<br />under the "LiquidModels" folder | can see "OtherForLiquid.cs"<br />under the "LiquidModels" folder |
 
 
 
