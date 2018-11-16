@@ -3,10 +3,10 @@
 /// {{table.TableDescription}} 相關的API服務
 /// </summary>
 [Route("api/{{table.MapTableName}}"), Produces("application/json")]
-public class {{table.MapTableName}}Controller : Controller
+public class {{table.MapTableName}}ApiController : Controller
 {
     private dbContext _ctx = null;
-    public {{table.MapTableName}}Controller(dbContext context)
+    public {{table.MapTableName}}ApiController(dbContext context)
     {
         _ctx = context;
     }

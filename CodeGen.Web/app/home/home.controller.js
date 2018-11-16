@@ -204,11 +204,13 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         var rowGen = [];
         var elementIDSql = 'genCodeSql';
         var elementIDVm = 'genCodeVm';
-        var elementIDVu = 'genCodeVu';
-        var elementIDNg = 'genCodeAngular';
-        var elementIDApi = 'genCodeAPI';
-        var elementIDService = 'genCodeService';
         var elementIDInterface = 'genCodeInterface';
+        var elementIDService = 'genCodeService';
+        var elementIDTest = 'genCodeTest';
+        var elementIDCtrl = 'genCodeCtrl';
+        var elementIDApi = 'genCodeAPI';
+        var elementIDNg = 'genCodeAngular';
+        var elementIDVu = 'genCodeVu';
         var elementIDMarkdown = 'genCodeMarkdown';
 
         if ($scope.colselectedlist.length == 0) {
@@ -268,18 +270,6 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 //20181112-howard- change response data is dictionary fommat.
                 rowGen = response.data;
 
-                //Html
-                if (rowGen.hasOwnProperty("View")) {
-                    document.getElementById(elementIDVu).innerHTML += rowGen["View"] + "\r\n";
-                }
-                //Angular
-                if (rowGen.hasOwnProperty("NG")) {
-                    document.getElementById(elementIDNg).innerHTML += rowGen["NG"] + "\r\n";
-                }
-                //WebAPI
-                if (rowGen.hasOwnProperty("APIGet")) {
-                    document.getElementById(elementIDApi).innerHTML += rowGen["APIGet"] + "\r\n";
-                }
                 //Model
                 if (rowGen.hasOwnProperty("DbModel")) {
                     document.getElementById(elementIDVm).innerHTML += rowGen["DbModel"] + "\r\n";
@@ -288,15 +278,35 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 if (rowGen.hasOwnProperty("SP")) {
                     document.getElementById(elementIDSql).innerHTML += rowGen["SP"] + "\r\n" + "\r\n";
                 }
-                //Service
-                if (rowGen.hasOwnProperty("Service")) {
-                    document.getElementById(elementIDService).innerHTML += rowGen["Service"] + "\r\n" + "\r\n";
-                }
                 //Interface
                 if (rowGen.hasOwnProperty("Interface")) {
                     document.getElementById(elementIDInterface).innerHTML += rowGen["Interface"] + "\r\n" + "\r\n";
                 }
-                //Markdown
+                //Service
+                if (rowGen.hasOwnProperty("Service")) {
+                    document.getElementById(elementIDService).innerHTML += rowGen["Service"] + "\r\n" + "\r\n";
+                }
+                //Test
+                if (rowGen.hasOwnProperty("Test")) {
+                    document.getElementById(elementIDTest).innerHTML += rowGen["Test"] + "\r\n" + "\r\n";
+                }
+                //Controller
+                if (rowGen.hasOwnProperty("Controller")) {
+                    document.getElementById(elementIDCtrl).innerHTML += rowGen["Controller"] + "\r\n" + "\r\n";
+                }
+                //WebAPI
+                if (rowGen.hasOwnProperty("APIGet")) {
+                    document.getElementById(elementIDApi).innerHTML += rowGen["APIGet"] + "\r\n";
+                }
+                //Angular
+                if (rowGen.hasOwnProperty("NG")) {
+                    document.getElementById(elementIDNg).innerHTML += rowGen["NG"] + "\r\n";
+                }
+                //Html
+                if (rowGen.hasOwnProperty("View")) {
+                    document.getElementById(elementIDVu).innerHTML += rowGen["View"] + "\r\n";
+                }
+                 //Markdown
                 if (rowGen.hasOwnProperty("Markdown")) {
                     document.getElementById(elementIDMarkdown).innerHTML += rowGen["Markdown"] + "\r\n" + "\r\n";
                 }

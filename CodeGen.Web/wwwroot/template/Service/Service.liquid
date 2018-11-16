@@ -1,4 +1,8 @@
-﻿    /// <summary>
+﻿    {%- assign symbol1 =other.IndentityColumn|slice:0|downcase -%}
+	{%- assign symbol2 =other.IndentityColumn|slice: 1,other.IndentityColumn.size -%}
+	{%- assign camelIdentityColumn = symbol1|append:symbol2 -%}
+
+	/// <summary>
     /// 針對{{table.TableDescription}}提供的相關服務
     /// </summary>
     public class {{table.MapTableName}}Service : I{{table.MapTableName}}Service
@@ -11,7 +15,18 @@
         /// <param name="condition">條件</param>
         /// <returns></returns>
         public IEnumerable<{{table.MapTableName}}> Query{{table.MapTableName}}ByCondition({{table.MapTableName}}Condition condition){
-            throw new NotImplementedException();
+            var sql = @"select * from {{table.TableName}} WITH (NOLOCK) where 1=1 ";
+            var filter = "";
+            if (condition != null)
+            {
+                if (!string.IsNullOrEmpty(condition.Name))
+                {
+                    condition.Name = $"%{condition.Name}%";
+                    filter += " and Name like @Name ";
+                }
+            }
+            var result = H2ORepository.Select<{{table.MapTableName}}>(sql, condition);
+            return result;
         }
 
 
@@ -19,18 +34,21 @@
         /// 取得所有{{table.TableDescription}}
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<{{table.MapTableName}}> GetAll{{table.MapTableName}}(){
-            throw new NotImplementedException();
+        public IEnumerable<{{table.MapTableName}}> GetAll{{table.MapTableName}}(){            
+            var result = H2ORepository.Select<{{table.MapTableName}}>();
+            return result;
         }
 
 
         /// <summary>
         /// 取得該筆{{table.TableDescription}}
         /// </summary>
-        /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
+        /// <param name="{{camelIdentityColumn}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
-        public {{table.MapTableName}} Get{{table.MapTableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}){
-            throw new NotImplementedException();
+        public {{table.MapTableName}} Get{{table.MapTableName}}({{other.IndentityModelType}} {{camelIdentityColumn}}){            
+            var result = H2ORepository.Select<{{table.MapTableName}}>(new { {{other.IndentityColumn}} = {{camelIdentityColumn}} })
+                .FirstOrDefault();
+            return result;
         }
 
 
@@ -41,26 +59,56 @@
         /// <param name="model"></param>
         /// <returns>建立完成後的Model(包括流水號)</returns>
         public {{table.MapTableName}} Create{{table.MapTableName}}({{table.MapTableName}} model){
-            throw new NotImplementedException();
+           //Validate
+            if (model == null)
+                Throw.BusinessError("未傳入參數資訊");
+            //TODO:custom validate
+
+            //Fill Data
+            model.CreateTime = DateTime.Now;
+            model.Updator = model.Creator;
+            model.UpdateTime = DateTime.Now;
+
+            //Execute
+            model.Insert(createRepositoryArgs: H2ORepository.ConnectionStringName);
+            return model;
         }
 
         /// <summary>
         /// 更新該筆{{table.TableDescription}}
         /// </summary>
-        /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
+        /// <param name="{{camelIdentityColumn}}">{{other.IndentityColumnDescription}}</param>
         /// <param name="model"></param>
         /// <returns>成功/失敗</returns>
-        public bool Update{{table.MapTableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}, {{table.MapTableName}} model){
-            throw new NotImplementedException();
+        public bool Update{{table.MapTableName}}({{other.IndentityModelType}} {{camelIdentityColumn}}, {{table.MapTableName}} model){
+            //Validate
+            if (model == null)
+                Throw.BusinessError("未傳入參數資訊");
+            //TODO:custom validate
+
+            var orgModel = Get{{table.MapTableName}}({{camelIdentityColumn}});
+
+            //Fill Data (need check which column need update)            
+            orgModel.Updator = model.Updator;
+            orgModel.UpdateTime = DateTime.Now;
+
+            //Execute
+            var result = orgModel.Update(
+                 new { {{other.IndentityColumn}} = {{camelIdentityColumn}} },
+                 createRepositoryArgs: H2ORepository.ConnectionStringName);
+            return result;
         }
 
         /// <summary>
         /// 刪除該筆{{table.TableDescription}}
         /// </summary>
-        /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
+        /// <param name="{{camelIdentityColumn}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
-        public bool Delete{{table.MapTableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}){
-            throw new NotImplementedException();
+        public bool Delete{{table.MapTableName}}({{other.IndentityModelType}} {{camelIdentityColumn}}){
+            //Execute
+            var result = H2ORepository.Delete<{{table.MapTableName}}>(
+                 new { {{other.IndentityColumn}} = {{camelIdentityColumn}} });
+            return (result > 0);
         }
         #endregion
         #endregion

@@ -1,4 +1,8 @@
-﻿    /// <summary>
+﻿    {%- assign symbol1 =other.IndentityColumn|slice:0|downcase -%}
+	{%- assign symbol2 =other.IndentityColumn|slice: 1,other.IndentityColumn.size -%}
+	{%- assign camelIndentityColumn = symbol1|append:symbol2 -%}
+
+    /// <summary>
     /// 針對{{table.TableDescription}}提供的相關服務
     /// </summary>
     [ServiceContract]
@@ -26,10 +30,10 @@
         /// <summary>
         /// 取得該筆{{table.TableDescription}}
         /// </summary>
-        /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
+        /// <param name="{{camelIndentityColumn}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
         [OperationContract]
-        {{table.MapTableName}} Get{{table.MapTableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}});
+        {{table.MapTableName}} Get{{table.MapTableName}}({{other.IndentityModelType}} {{camelIndentityColumn}});
 
 
         #region {{table.TableDescription}}維護
@@ -44,19 +48,19 @@
         /// <summary>
         /// 更新該筆{{table.TableDescription}}
         /// </summary>
-        /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
+        /// <param name="{{camelIndentityColumn}}">{{other.IndentityColumnDescription}}</param>
         /// <param name="model"></param>
         /// <returns>成功/失敗</returns>
         [OperationContract]
-        bool Update{{table.MapTableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}, {{table.MapTableName}} model);
+        bool Update{{table.MapTableName}}({{other.IndentityModelType}} {{camelIndentityColumn}}, {{table.MapTableName}} model);
 
         /// <summary>
         /// 刪除該筆{{table.TableDescription}}
         /// </summary>
-        /// <param name="{{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}}">{{other.IndentityColumnDescription}}</param>
+        /// <param name="{{camelIndentityColumn}}">{{other.IndentityColumnDescription}}</param>
         /// <returns></returns>
         [OperationContract]
-        bool Delete{{table.MapTableName}}({{other.IndentityModelType}} {{other.IndentityColumn|slice:0|downcase}}{{other.IndentityColumn|slice: 1,other.IndentityColumn.size}});
+        bool Delete{{table.MapTableName}}({{other.IndentityModelType}} {{camelIndentityColumn}});
         #endregion
         #endregion
 

@@ -1,0 +1,85 @@
+﻿    {%- assign symbol1 =other.IndentityColumn|slice:0|downcase -%}
+	{%- assign symbol2 =other.IndentityColumn|slice: 1,other.IndentityColumn.size -%}
+	{%- assign camelIdentityColumn = symbol1|append:symbol2 -%}
+
+		#region {{table.TableDescription}}({{table.MapTableName}})
+        [TestMethod]
+        public void TestQuery{{table.MapTableName}}ByCondition()
+        {
+            var condition = new {{table.MapTableName}}Condition() { Name = "TEST" };
+            var result = _service.Query{{table.MapTableName}}ByCondition(condition);
+            Assert.IsTrue((result.Count() > 0), "no data in {{table.MapTableName}} or error!");
+        }
+
+        [TestMethod]
+        public void TestGetAll{{table.MapTableName}}()
+        {
+            var result = _service.GetAll{{table.MapTableName}}();
+            Assert.IsTrue((result.Count() > 0), "no data in {{table.MapTableName}} or error!");
+        }
+
+        [TestMethod]
+        public void TestGet{{table.MapTableName}}()
+        {
+            var condition = new {{table.MapTableName}}Condition() { Name = "TEST" };
+            var data = _service.Query{{table.MapTableName}}ByCondition(condition);
+            if (data.Count() > 0)
+            {
+                var model = data.FirstOrDefault();
+                int {{camelIdentityColumn}} = model.{{other.IndentityColumn}};
+                var result = _service.Get{{table.MapTableName}}({{camelIdentityColumn}});
+                Assert.IsTrue((result != null), "no data in {{table.MapTableName}} or error!");
+            }
+        }
+
+        [TestMethod]
+        public void TestCreate{{table.MapTableName}}()
+        {
+            var model = new {{table.MapTableName}}
+            {
+                Parent{{other.IndentityColumn}}=0,
+                Name = "TEST",
+                Description = "TEST Description",
+                SortOrder = 0,
+                Creator = "howard",
+            };
+            var result = _service.Create{{table.MapTableName}}(model);
+            Assert.IsTrue((result != null && result.{{other.IndentityColumn}} > 0), "Execution Occur Error!");
+        }
+
+        [TestMethod]
+        public void TestUpdate{{table.MapTableName}}()
+        {
+            var condition = new {{table.MapTableName}}Condition() { Name = "TEST" };
+            var data = _service.Query{{table.MapTableName}}ByCondition(condition);
+            if (data.Count() > 0)
+            {
+                var model = data.FirstOrDefault();
+                int {{camelIdentityColumn}} = model.{{other.IndentityColumn}};
+                var target = new {{table.MapTableName}}
+                {
+                    {{other.IndentityColumn}} = {{camelIdentityColumn}},
+                    Name = "TEST",
+                    Description = "TEST Description TEST",
+                    SortOrder = 0,
+                    Updator = "howard"
+                };
+                var result = _service.Update{{table.MapTableName}}({{camelIdentityColumn}}, target);
+                Assert.IsTrue(result, "Execution Occur Error!");
+            }
+        }
+
+        [TestMethod]
+        public void TestDelete{{table.MapTableName}}()
+        {
+            var condition = new {{table.MapTableName}}Condition() { Name = "TEST" };
+            var data = _service.Query{{table.MapTableName}}ByCondition(condition);
+            if (data.Count() > 0)
+            {
+                var model = data.FirstOrDefault();
+                int {{camelIdentityColumn}} = model.{{other.IndentityColumn}};
+                var result = _service.Delete{{table.MapTableName}}({{camelIdentityColumn}});
+                Assert.IsTrue(result, "Execution Occur Error!");
+            }
+        }
+        #endregion

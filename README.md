@@ -53,6 +53,16 @@ see this page： [建置手冊.md](https://github.com/hougii/MyCodeGen/blob/mast
 
 
 
+## Liquid Variable
+
+| Type     | Table Info                                                   | Column Info | Other Info |
+| -------- | ------------------------------------------------------------ | ----------- | ---------- |
+| variable | TableId<br />TableName<br />MapTableName<br />TableDescription |             |            |
+| Sample   | {{table.MapTableName}}                                       |             |            |
+| memo     | can see "TableInfoForLiquid.cs"                              |             |            |
+
+
+
 ## Contributing
 
 

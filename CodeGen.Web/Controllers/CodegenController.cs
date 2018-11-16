@@ -161,26 +161,34 @@ namespace CodeGen.Web.Controllers
                 fileContentDbModel = new ModelGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
                 resultCollectionDic.Add("DbModel", fileContentDbModel);
 
-                //View
-                fileContentView = new FormGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("View", fileContentView);
-
-                //NG
-                fileContentNg = new NgGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("NG", fileContentNg);
-
-                //API
-                fileContentAPI = new APIGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("APIGet", fileContentAPI);
-
-                //Service
-                fileContentAPI = new ServiceGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("Service", fileContentAPI);
-
                 //Interface
                 fileContentAPI = new InterfaceGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
                 resultCollectionDic.Add("Interface", fileContentAPI);
 
+                //Service
+                fileContentAPI = new ServiceGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                resultCollectionDic.Add("Service", fileContentAPI);
+                
+                //Test
+                fileContentAPI = new TestGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                resultCollectionDic.Add("Test", fileContentAPI);
+
+                //Controller
+                fileContentAPI = new ControllerGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                resultCollectionDic.Add("Controller", fileContentAPI);
+
+                //API
+                fileContentAPI = new APIGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                resultCollectionDic.Add("APIGet", fileContentAPI);
+                
+                //NG
+                fileContentNg = new NgGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                resultCollectionDic.Add("NG", fileContentNg);
+                
+                //View
+                fileContentView = new FormGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                resultCollectionDic.Add("View", fileContentView);
+                
                 //Markdown
                 fileContentMarkdown = new MarkdownGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
                 resultCollectionDic.Add("Markdown", fileContentMarkdown);
@@ -223,7 +231,7 @@ namespace CodeGen.Web.Controllers
 
                 var postData = JsonConvert.DeserializeObject<dynamic>(data.ToString());
                 var databaseJson = postData.database;
-                bool enableMap = Convert.ToBoolean(postData.enableMap);
+                bool enableMap = (bool)postData.enableMap;
                 string dbName = databaseJson.DatabaseName;
 
                 List<TableInfo> tableInfo = getAllTableFromDb(dbName);
@@ -366,7 +374,7 @@ namespace CodeGen.Web.Controllers
             var identityColumn = columnsForLiquid.FirstOrDefault();//暫以第一筆表示
             if (identityColumn != null)
             {
-                result.IndentityColumn = identityColumn.ColumnName;
+                result.IndentityColumn = identityColumn.MapColumnName;
                 result.IndentityModelType = identityColumn.ModelType;
                 result.IndentityColumnDescription = identityColumn.ColumnDescription;
             }
