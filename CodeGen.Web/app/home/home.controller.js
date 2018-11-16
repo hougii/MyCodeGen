@@ -6,6 +6,9 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
     $scope.colselectedlist = [];
     $scope.isCheckAll = 0;
     $scope.colmaplist = [];
+    $scope.copyClick = function () {
+        alert('not implement');
+    };
     $scope.copySuccess = function () {
         console.log('Copied!');
     };

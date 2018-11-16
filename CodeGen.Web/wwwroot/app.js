@@ -47,6 +47,9 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
     $scope.colselectedlist = [];
     $scope.isCheckAll = 0;
     $scope.colmaplist = [];
+    $scope.copyClick = function () {
+        alert('not implement');
+    };
     $scope.copySuccess = function () {
         console.log('Copied!');
     };
@@ -412,16 +415,16 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
 }]);
 
 
-templatingApp.directive("fixedSidebarleft", function () {
-    return {
-        restrict: 'EA',
-        templateUrl: 'views/shared/sidebar/menu.html'
-    };
-});
-
 templatingApp.directive("topNavbarmenu", function () {
     return {
         restrict: 'EA',
         templateUrl: 'views/shared/navbar/nav.html'
+    };
+});
+
+templatingApp.directive("fixedSidebarleft", function () {
+    return {
+        restrict: 'EA',
+        templateUrl: 'views/shared/sidebar/menu.html'
     };
 });
