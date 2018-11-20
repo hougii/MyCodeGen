@@ -1,15 +1,13 @@
 ﻿    {%- assign symbol1 =other.IndentityColumn|slice:0|downcase -%}
 	{%- assign symbol2 =other.IndentityColumn|slice: 1,other.IndentityColumn.size -%}
 	{%- assign camelIndentityColumn = symbol1|append:symbol2 -%}
-
     /// <summary>
     /// 針對{{table.TableDescription}}提供的相關服務
     /// </summary>
     [ServiceContract]
     public interface I{{table.MapTableName}}Service
     {
-        #region {{table.TableDescription}}相關({{table.MapTableName}})
-         
+        #region {{table.TableDescription}}相關({{table.MapTableName}})         
         /// <summary>
         /// 依條件取得{{table.TableDescription}}資訊
         /// </summary>
@@ -18,14 +16,12 @@
         [OperationContract]
         IEnumerable<{{table.MapTableName}}> Query{{table.MapTableName}}ByCondition({{table.MapTableName}}Condition condition);
 
-
         /// <summary>
         /// 取得所有{{table.TableDescription}}
         /// </summary>
         /// <returns></returns>
         [OperationContract]
         IEnumerable<{{table.MapTableName}}> GetAll{{table.MapTableName}}();
-
 
         /// <summary>
         /// 取得該筆{{table.TableDescription}}
@@ -35,8 +31,6 @@
         [OperationContract]
         {{table.MapTableName}} Get{{table.MapTableName}}({{other.IndentityModelType}} {{camelIndentityColumn}});
 
-
-        #region {{table.TableDescription}}維護
         /// <summary>
         /// 建立該筆{{table.TableDescription}}
         /// </summary>
@@ -61,7 +55,6 @@
         /// <returns></returns>
         [OperationContract]
         bool Delete{{table.MapTableName}}({{other.IndentityModelType}} {{camelIndentityColumn}});
-        #endregion
         #endregion
 
     }

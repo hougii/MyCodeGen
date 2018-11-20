@@ -1,14 +1,12 @@
 ﻿    {%- assign symbol1 =other.IndentityColumn|slice:0|downcase -%}
 	{%- assign symbol2 =other.IndentityColumn|slice: 1,other.IndentityColumn.size -%}
 	{%- assign camelIdentityColumn = symbol1|append:symbol2 -%}
-
 	/// <summary>
     /// 針對{{table.TableDescription}}提供的相關服務
     /// </summary>
     public class {{table.MapTableName}}Service : I{{table.MapTableName}}Service
     {
-        #region {{table.TableDescription}}相關({{table.MapTableName}})
-         
+        #region {{table.TableDescription}}相關({{table.MapTableName}})         
         /// <summary>
         /// 依條件取得{{table.TableDescription}}資訊
         /// </summary>
@@ -28,7 +26,6 @@
             var result = H2ORepository.Select<{{table.MapTableName}}>(sql, condition);
             return result;
         }
-
 
         /// <summary>
         /// 取得所有{{table.TableDescription}}
@@ -51,8 +48,6 @@
             return result;
         }
 
-
-        #region {{table.TableDescription}}維護
         /// <summary>
         /// 建立該筆{{table.TableDescription}}
         /// </summary>
@@ -110,7 +105,6 @@
                  new { {{other.IndentityColumn}} = {{camelIdentityColumn}} });
             return (result > 0);
         }
-        #endregion
         #endregion
 
     }

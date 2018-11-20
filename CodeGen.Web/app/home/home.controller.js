@@ -265,8 +265,12 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 contentType: 'application/json; charset=utf-8'
             }).then(function (response) {
 
-                $('#genCodeSql').text(''); $('#genCodeVm').text(''); $('#genCodeVu').text(''); $('#genCodeAngular').text(''); $('#genCodeAPI').text(''); $('#genCodeService').text(''); $('#genCodeInterface').text(''); $('#genCodeMarkdown').text('');
-
+                $('#genCodeSql').text(''); $('#genCodeVm').text('');
+                $('#genCodeInterface').text(''); $('#genCodeService').text('');
+                $('#genCodeTest').text(''); $('#genCodeCtrl').text('');
+                $('#genCodeAPI').text(''); $('#genCodeAngular').text('');
+                $('#genCodeVu').text(''); $('#genCodeMarkdown').text('');
+                
                 //20181112-howard- change response data is dictionary fommat.
                 rowGen = response.data;
 
