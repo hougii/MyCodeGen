@@ -265,11 +265,11 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 contentType: 'application/json; charset=utf-8'
             }).then(function (response) {
 
-                $('#genCodeSql').text(''); $('#genCodeVm').text('');
-                $('#genCodeInterface').text(''); $('#genCodeService').text('');
-                $('#genCodeTest').text(''); $('#genCodeCtrl').text('');
-                $('#genCodeAPI').text(''); $('#genCodeAngular').text('');
-                $('#genCodeVu').text(''); $('#genCodeMarkdown').text('');
+                $('#' + elementIDSql).text(''); $('#' + elementIDVm).text('');
+                $('#' + elementIDInterface).text(''); $('#' + elementIDService).text('');
+                $('#' + elementIDTest).text(''); $('#' + elementIDCtrl).text('');
+                $('#' + elementIDApi).text(''); $('#' + elementIDNg).text('');
+                $('#' + elementIDVu).text(''); $('#' + elementIDMarkdown).text('');
                 
                 //20181112-howard- change response data is dictionary fommat.
                 rowGen = response.data;

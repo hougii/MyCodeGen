@@ -35,11 +35,6 @@ templatingApp.config(['$locationProvider', '$stateProvider', '$urlRouterProvider
     }]); 
 
 
-templatingApp.controller('AboutController', ['$scope', '$http', function ($scope, $http) {
-    $scope.title = "About Page";
-}]);
-
-
 templatingApp.controller('HomeController', ['$scope', '$http', function ($scope, $http) {
 
     $scope.dbId = 0; $scope.dbname = null;
@@ -306,8 +301,12 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 contentType: 'application/json; charset=utf-8'
             }).then(function (response) {
 
-                $('#genCodeSql').text(''); $('#genCodeVm').text(''); $('#genCodeVu').text(''); $('#genCodeAngular').text(''); $('#genCodeAPI').text(''); $('#genCodeService').text(''); $('#genCodeInterface').text(''); $('#genCodeMarkdown').text('');
-
+                $('#' + elementIDSql).text(''); $('#' + elementIDVm).text('');
+                $('#' + elementIDInterface).text(''); $('#' + elementIDService).text('');
+                $('#' + elementIDTest).text(''); $('#' + elementIDCtrl).text('');
+                $('#' + elementIDApi).text(''); $('#' + elementIDNg).text('');
+                $('#' + elementIDVu).text(''); $('#' + elementIDMarkdown).text('');
+                
                 //20181112-howard- change response data is dictionary fommat.
                 rowGen = response.data;
 
@@ -422,6 +421,11 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
 
         return request;
     };
+}]);
+
+
+templatingApp.controller('AboutController', ['$scope', '$http', function ($scope, $http) {
+    $scope.title = "About Page";
 }]);
 
 
