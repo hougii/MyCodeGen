@@ -23,6 +23,7 @@
                     filter += " and Name like @Name ";
                 }
             }
+            sql = sql + filter;
             var result = H2ORepository.Select<{{table.MapTableName}}>(sql, condition);
             return result;
         }
