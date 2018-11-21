@@ -35,6 +35,11 @@ templatingApp.config(['$locationProvider', '$stateProvider', '$urlRouterProvider
     }]); 
 
 
+templatingApp.controller('AboutController', ['$scope', '$http', function ($scope, $http) {
+    $scope.title = "About Page";
+}]);
+
+
 templatingApp.controller('HomeController', ['$scope', '$http', function ($scope, $http) {
 
     $scope.dbId = 0; $scope.dbname = null;
@@ -152,7 +157,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 $scope.colselectedlist.push({
                     ColumnId: itm.columnId,
                     ColumnName: itm.columnName,
-                    MapColumnName: '',
+                    MapColumnName: itm.columnName,//set default
                     DataType: itm.dataType,
                     MaxLength: itm.maxLength,
                     IsNullable: itm.isNullable,
@@ -199,7 +204,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         var tempColList = collist.slice(0).reverse();//clone array & reverse
 
         //add table info to tempColList (because need table rename mapping)
-        tempColList.push({ columnName: tempTable.tableName, columnDescription: tempTable.tableDescription});
+        tempColList.push({ columnName: tempTable.tableName, columnDescription: tempTable.tableDescription });
 
         $(tempColList).each(function (i, col) {
             var colname = col.columnName;
@@ -258,7 +263,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             var enableMap = $("#enableMap").is(":checked");
 
             //Fill mapColumn data
-            angular.forEach($scope.colselectedlist,function (item,i) {
+            angular.forEach($scope.colselectedlist, function (item, i) {
                 var colname = item.ColumnName;
                 var coldesc = item.ColumnDescription;
                 var orgdesc = item.OrgColumnDescription;
@@ -268,7 +273,8 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 if (enableMap && mapcolumn != null) {
                     var mapColumnName = mapcolumn.mapColumnName;
                     var mapDesc = mapcolumn.columnDescription;
-                    item.MapColumnName = mapColumnName;
+                    if (mapColumnName != "")
+                        item.MapColumnName = mapColumnName;
                     item.ColumnDescription = mapDesc;
                     item.OrgColumnDescription = (orgdesc != null) ? orgdesc : coldesc;
                 }
@@ -284,7 +290,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             if (enableMap && maptable != null) {
                 var mapTableName = maptable.mapColumnName;
                 var mapDesc = maptable.columnDescription;
-                table.mapTableName= mapTableName;
+                table.mapTableName = mapTableName;
                 table.tableDescription = mapDesc;
                 table.orgColumnDescription = (orgtabledesc != null) ? orgtabledesc : tabledesc;
             }
@@ -306,7 +312,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 $('#' + elementIDTest).text(''); $('#' + elementIDCtrl).text('');
                 $('#' + elementIDApi).text(''); $('#' + elementIDNg).text('');
                 $('#' + elementIDVu).text(''); $('#' + elementIDMarkdown).text('');
-                
+
                 //20181112-howard- change response data is dictionary fommat.
                 rowGen = response.data;
 
@@ -346,7 +352,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 if (rowGen.hasOwnProperty("View")) {
                     document.getElementById(elementIDVu).innerHTML += rowGen["View"] + "\r\n";
                 }
-                 //Markdown
+                //Markdown
                 if (rowGen.hasOwnProperty("Markdown")) {
                     document.getElementById(elementIDMarkdown).innerHTML += rowGen["Markdown"] + "\r\n" + "\r\n";
                 }
@@ -421,11 +427,6 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
 
         return request;
     };
-}]);
-
-
-templatingApp.controller('AboutController', ['$scope', '$http', function ($scope, $http) {
-    $scope.title = "About Page";
 }]);
 
 
