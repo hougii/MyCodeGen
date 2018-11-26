@@ -1,8 +1,128 @@
-﻿
+﻿ {%- assign symbol1 =table.MapTableName|slice:0|downcase -%}
+	{%- assign symbol2 =table.MapTableName|slice: 1,table.MapTableName.size -%}
+	{%- assign camelMapTableName = symbol1|append:symbol2 -%}
+
+	{%- assign symbol1_1 =other.IndentityColumn|slice:0|downcase -%}
+	{%- assign symbol2_1 =other.IndentityColumn|slice: 1,other.IndentityColumn.size -%}
+	{%- assign camelIdentityColumn = symbol1_1|append:symbol2_1 -%}
+
 /// <summary>
 /// {{table.TableDescription}} 相關的Controller服務
 /// </summary>
 public class {{table.MapTableName}}Controller : Controller
 {
-    //Wait to Define Template
+		private I{{table.MapTableName}}Service _{{camelMapTableName}}Service;
+
+        public {{table.MapTableName}}Controller()
+        {
+            _{{camelMapTableName}}Service = ServiceHelper.Create<I{{table.MapTableName}}Service>();
+            if (_{{camelMapTableName}}Service == null)
+            {
+                Throw.SystemError("I{{table.MapTableName}} is not Register in config!");
+            }
+        }
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+
+        /// <summary>
+        /// 取得單筆的{{table.TableDescription}}資訊
+        /// </summary>
+        /// <param name="{{camelIdentityColumn}}"></param>
+        /// <returns></returns>
+        public ActionResult Get(int {{camelIdentityColumn}})
+        {
+            {{table.MapTableName}}MaintainDTO result = _{{camelMapTableName}}Service.Get{{table.MapTableName}}({{camelIdentityColumn}});
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 新增{{table.TableDescription}}資訊
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>新增後的{{table.TableDescription}}資料</returns>
+        public ActionResult Create({{table.MapTableName}}MaintainDTO model)
+        {
+            if (model == null)
+                Throw.BusinessError("請傳入參數");
+            Throw.Debug("傳入參數："+JsonConvert.SerializeObject(model));
+
+            //填入建立者
+            var creator = User.MemberInfo.ID;
+            model.{{table.MapTableName}}.Creator = creator;
+            model.{{table.MapTableName}}.Updator = creator;
+            if (model.ReadPermissions != null && model.ReadPermissions.Any()) {
+                model.ReadPermissions.ForEach(m => {
+                    m.Creator = creator;
+                });
+            }
+            if (model.MgmtPermissions != null && model.MgmtPermissions.Any())
+            {
+                model.MgmtPermissions.ForEach(m => {
+                    m.Creator = creator;
+                });
+            }
+
+            var newModel = _{{camelMapTableName}}Service.Create{{table.MapTableName}}(model);
+            return Json(newModel);
+        }
+
+        /// <summary>
+        /// 更新{{table.TableDescription}}資訊
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>更新後的{{table.TableDescription}}資訊(若失敗則回傳null)</returns>
+        public ActionResult Update({{table.MapTableName}}MaintainDTO model)
+        {
+            if (model == null)
+                Throw.BusinessError("請傳入參數");
+            Throw.Debug("傳入參數：" + JsonConvert.SerializeObject(model));
+            {{table.MapTableName}}MaintainDTO newModel = null;
+            int {{camelIdentityColumn}} = model.{{table.MapTableName}}.{{other.IndentityColumn}};
+            //填入更新者
+            var updator = User.MemberInfo.ID;
+            model.{{table.MapTableName}}.Updator = updator;
+            if (model.ReadPermissions != null && model.ReadPermissions.Any())
+            {
+                model.ReadPermissions.ForEach(m => {
+                    m.Creator = updator;
+                });
+            }
+            if (model.MgmtPermissions != null && model.MgmtPermissions.Any())
+            {
+                model.MgmtPermissions.ForEach(m => {
+                    m.Creator = updator;
+                });
+            }
+            var isOK = _{{camelMapTableName}}Service.Update{{table.MapTableName}}({{camelIdentityColumn}}, model);
+            if (isOK) {
+                newModel = _{{camelMapTableName}}Service.Get{{table.MapTableName}}({{camelIdentityColumn}});
+            }
+            return Json(newModel);
+        }
+
+        /// <summary>
+        /// 刪除{{table.TableDescription}}資訊
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>父層的{{table.TableDescription}}資訊(若沒有則回傳null)</returns>
+        public ActionResult Delete({{table.MapTableName}}MaintainDTO model)
+        {
+            Throw.Debug("傳入參數：" + JsonConvert.SerializeObject(model));
+            {{table.MapTableName}}MaintainDTO parentModel = null;
+            int {{camelIdentityColumn}} = model.{{table.MapTableName}}.{{other.IndentityColumn}};
+            int? parent{{other.IndentityColumn}} = model.{{table.MapTableName}}.Parent{{other.IndentityColumn}};
+            var isOK = _{{camelMapTableName}}Service.Delete{{table.MapTableName}}({{camelIdentityColumn}});
+            if (isOK) {
+                if (parent{{other.IndentityColumn}}.HasValue)
+                {
+                    //回傳父層資訊
+                    parentModel = _{{camelMapTableName}}Service.Get{{table.MapTableName}}(parent{{other.IndentityColumn}}.Value);
+                }
+            }
+            return Json(parentModel);
+        }
 }
