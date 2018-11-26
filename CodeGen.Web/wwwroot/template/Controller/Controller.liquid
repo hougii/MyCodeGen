@@ -29,7 +29,7 @@ public class {{table.MapTableName}}Controller : Controller
 
 
         /// <summary>
-        /// 取得單筆的{{table.TableDescription}}資訊
+        /// 取得單筆的{{table.TableDescription}}
         /// </summary>
         /// <param name="{{camelIdentityColumn}}"></param>
         /// <returns></returns>
@@ -40,7 +40,7 @@ public class {{table.MapTableName}}Controller : Controller
         }
 
         /// <summary>
-        /// 新增{{table.TableDescription}}資訊
+        /// 新增{{table.TableDescription}}
         /// </summary>
         /// <param name="model"></param>
         /// <returns>新增後的{{table.TableDescription}}資料</returns>
@@ -71,10 +71,10 @@ public class {{table.MapTableName}}Controller : Controller
         }
 
         /// <summary>
-        /// 更新{{table.TableDescription}}資訊
+        /// 更新{{table.TableDescription}}
         /// </summary>
         /// <param name="model"></param>
-        /// <returns>更新後的{{table.TableDescription}}資訊(若失敗則回傳null)</returns>
+        /// <returns>更新後的{{table.TableDescription}}(若失敗則回傳null)</returns>
         public ActionResult Update({{table.MapTableName}}MaintainDTO model)
         {
             if (model == null)
@@ -105,10 +105,10 @@ public class {{table.MapTableName}}Controller : Controller
         }
 
         /// <summary>
-        /// 刪除{{table.TableDescription}}資訊
+        /// 刪除{{table.TableDescription}}
         /// </summary>
         /// <param name="model"></param>
-        /// <returns>父層的{{table.TableDescription}}資訊(若沒有則回傳null)</returns>
+        /// <returns>父層的{{table.TableDescription}}(若沒有則回傳null)</returns>
         public ActionResult Delete({{table.MapTableName}}MaintainDTO model)
         {
             Throw.Debug("傳入參數：" + JsonConvert.SerializeObject(model));
@@ -119,7 +119,7 @@ public class {{table.MapTableName}}Controller : Controller
             if (isOK) {
                 if (parent{{other.IndentityColumn}}.HasValue)
                 {
-                    //回傳父層資訊
+                    //回傳父層
                     parentModel = _{{camelMapTableName}}Service.Get{{table.MapTableName}}(parent{{other.IndentityColumn}}.Value);
                 }
             }
