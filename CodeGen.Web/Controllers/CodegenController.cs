@@ -95,6 +95,11 @@ namespace CodeGen.Web.Controllers
             var result = "";
             string webRootPath = _hostingEnvironment.WebRootPath; //From web
             var filePath = webRootPath + "\\template\\ColumnMap\\colmap.json";
+            if (!System.IO.File.Exists(filePath)) {
+                using (StreamWriter sw = System.IO.File.CreateText(filePath)) {
+                    sw.Write("[]");
+                }
+            }
             var content = System.IO.File.ReadAllText(filePath, Encoding.UTF8);
             result = content;
             return Json(result);
@@ -351,7 +356,7 @@ namespace CodeGen.Web.Controllers
                                 IsNullable = (dr["Nullable"].ToString() == "YES") ? true : false,
                                 TableName = tableName,
                                 TableSchema = dr["Schema"].ToString(),
-                                ColumnDescription = dr["Description"].ToString()
+                                ColumnDescription = (dr["Description"].ToString()??"").Replace("\\n", "").Replace("\\r", "")
                             });
                         }
                     }

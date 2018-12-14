@@ -125,9 +125,9 @@
                         <table class="table table-hover mb-0">
                             <tbody>
                                 <tr ng-repeat="itm in colmaplist | filter:search_clmmap">
-                                    <td>{{itm.columnName}}</td>
-                                    <td><input type="text" ng-model="itm.mapColumnName" /></td>
-                                    <td><input type="text" ng-model="itm.columnDescription" /></td>
+                                    <td style="word-break: break-all;width:300px">{{itm.columnName}}</td>
+                                    <td style="width:100px"><input type="text" style="width:100px" ng-model="itm.mapColumnName" /></td>
+                                    <td style="width:150px"><input type="text" style="width:150px" ng-model="itm.columnDescription" /></td>
                                 </tr>
                             </tbody>
                         </table>

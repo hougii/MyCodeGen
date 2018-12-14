@@ -69,6 +69,9 @@ namespace CodeGen.Web.Models
                 case "bit":
                     result = (isNullable) ? "bool?" : "bool";
                     break;
+                case "bigint":
+                    result = (isNullable) ? "long?" : "long";
+                    break;
                 case string s when (s.Contains("int")):
                     result = (isNullable) ? "int?":"int";
                     break;

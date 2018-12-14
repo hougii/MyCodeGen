@@ -268,6 +268,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 var coldesc = item.ColumnDescription;
                 var orgdesc = item.OrgColumnDescription;
                 var mapcolumn = $scope.colmaplist.find((elem) => elem.columnName == colname);
+                //預設Map值為原Colname
                 item.MapColumnName = colname;
                 item.ColumnDescription = (orgdesc != null) ? orgdesc : coldesc;
                 if (enableMap && mapcolumn != null) {
@@ -285,12 +286,14 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
             var tabledesc = table.tableDescription;
             var orgtabledesc = table.orgColumnDescription;
             var maptable = $scope.colmaplist.find((elem) => elem.columnName == tablename);
+            //預設Map值為原Colname
             table.mapTableName = tablename;
             table.tableDescription = (orgtabledesc != null) ? orgtabledesc : tabledesc;
             if (enableMap && maptable != null) {
                 var mapTableName = maptable.mapColumnName;
                 var mapDesc = maptable.columnDescription;
-                table.mapTableName = mapTableName;
+                if (mapTableName != "")
+                     table.mapTableName = mapTableName;
                 table.tableDescription = mapDesc;
                 table.orgColumnDescription = (orgtabledesc != null) ? orgtabledesc : tabledesc;
             }
