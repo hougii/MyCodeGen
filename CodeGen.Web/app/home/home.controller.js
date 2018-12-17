@@ -209,7 +209,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
         var elementIDTest = 'genCodeTest';
         var elementIDCtrl = 'genCodeCtrl';
         var elementIDApi = 'genCodeAPI';
-        var elementIDNg = 'genCodeAngular';
+        var elementIDTS = 'genCodeTS';
         var elementIDVu = 'genCodeVu';
         var elementIDMarkdown = 'genCodeMarkdown';
 
@@ -272,7 +272,7 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 $('#' + elementIDSql).text(''); $('#' + elementIDVm).text('');
                 $('#' + elementIDInterface).text(''); $('#' + elementIDService).text('');
                 $('#' + elementIDTest).text(''); $('#' + elementIDCtrl).text('');
-                $('#' + elementIDApi).text(''); $('#' + elementIDNg).text('');
+                $('#' + elementIDApi).text(''); $('#' + elementIDTS).text('');
                 $('#' + elementIDVu).text(''); $('#' + elementIDMarkdown).text('');
 
                 //20181112-howard- change response data is dictionary fommat.
@@ -306,9 +306,9 @@ templatingApp.controller('HomeController', ['$scope', '$http', function ($scope,
                 if (rowGen.hasOwnProperty("APIGet")) {
                     document.getElementById(elementIDApi).innerHTML += rowGen["APIGet"] + "\r\n";
                 }
-                //Angular
-                if (rowGen.hasOwnProperty("NG")) {
-                    document.getElementById(elementIDNg).innerHTML += rowGen["NG"] + "\r\n";
+                //TS
+                if (rowGen.hasOwnProperty("TS")) {
+                    document.getElementById(elementIDTS).innerHTML += rowGen["TS"] + "\r\n";
                 }
                 //Html
                 if (rowGen.hasOwnProperty("View")) {

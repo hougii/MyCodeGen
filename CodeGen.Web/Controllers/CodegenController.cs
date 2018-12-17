@@ -27,6 +27,20 @@ namespace CodeGen.Web.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly string _conString = "";//"server=DESKTOP-80DEJMQ; uid=sa; pwd=sa@12345;";
 
+        //定義程式的產生(Key,LiquidPath)
+        Dictionary<string, string> _genDefineDic = new Dictionary<string, string> {
+                    {"SP","\\template\\StoredProcedure\\SP.liquid" },
+                    {"DbModel","\\template\\Model\\Model.liquid" },
+                    {"Interface","\\template\\Interface\\Interface.liquid" },
+                    {"Service","\\template\\Service\\Service.liquid" },
+                    {"Test","\\template\\Test\\Test.liquid" },
+                    {"Controller","\\template\\Controller\\Controller.liquid" },
+                    {"APIGet","\\template\\WebAPI\\APIController.liquid" },
+                    {"TS","\\template\\TS\\TS.liquid" },
+                    {"View","\\template\\HtmlForm\\HtmlForm.liquid" },
+                    {"Markdown","\\template\\Markdown\\Markdown.liquid" }
+                };
+
         public CodegenController(
             IHostingEnvironment hostingEnvironment,
             IConfiguration config)
@@ -149,54 +163,11 @@ namespace CodeGen.Web.Controllers
                 var columnInfosForLiquid = columnInfos.Select(m => new ColumnInfoForLiquid(m)).ToList();
                 var otherInfoForLiquid = getOtherInfoForLiquid(tableInfoForLiquid, columnInfosForLiquid);
 
-                string fileContentSP = string.Empty;
-                string fileContentDbModel = string.Empty;
-                string fileContentView = string.Empty;
-                string fileContentNg = string.Empty;
-                string fileContentAPI = string.Empty;
-                string fileContentService = string.Empty;
-                string fileContentInterface = string.Empty;
-                string fileContentMarkdown = "";
-
-                //SP
-                fileContentSP = new SpGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("SP", fileContentSP);
-
-                //DbModel
-                fileContentDbModel = new ModelGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("DbModel", fileContentDbModel);
-
-                //Interface
-                fileContentAPI = new InterfaceGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("Interface", fileContentAPI);
-
-                //Service
-                fileContentAPI = new ServiceGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("Service", fileContentAPI);
                 
-                //Test
-                fileContentAPI = new TestGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("Test", fileContentAPI);
-
-                //Controller
-                fileContentAPI = new ControllerGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("Controller", fileContentAPI);
-
-                //API
-                fileContentAPI = new APIGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("APIGet", fileContentAPI);
-                
-                //NG
-                fileContentNg = new NgGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("NG", fileContentNg);
-                
-                //View
-                fileContentView = new FormGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("View", fileContentView);
-                
-                //Markdown
-                fileContentMarkdown = new MarkdownGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
-                resultCollectionDic.Add("Markdown", fileContentMarkdown);
+                foreach (var item in _genDefineDic) {
+                    var result = new CustomGenerator(item.Value).Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                    resultCollectionDic.Add(item.Key, result);
+                }
             }
             catch (Exception ex)
             {
@@ -240,6 +211,8 @@ namespace CodeGen.Web.Controllers
                 string dbName = databaseJson.DatabaseName;
 
                 List<TableInfo> tableInfo = getAllTableFromDb(dbName);
+                //Markdown
+                var markdown = _genDefineDic.Where(m => m.Key == "Markdown").FirstOrDefault();
 
                 foreach (TableInfo table in tableInfo) {
                     var tableName = table.TableName;
@@ -249,12 +222,11 @@ namespace CodeGen.Web.Controllers
                     var columnInfosForLiquid = columnInfos.Select(m => new ColumnInfoForLiquid(m)).ToList();
                     var otherInfoForLiquid = getOtherInfoForLiquid(tableInfoForLiquid, columnInfosForLiquid);
 
-                    //Markdown
-                    fileContentMarkdown = new MarkdownGenerator().Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
+                   fileContentMarkdown = new CustomGenerator(markdown.Value).Generate(tableInfoForLiquid, columnInfosForLiquid, otherInfoForLiquid, webRootPath);
                     builder.AppendLine(fileContentMarkdown);
                 }
 
-                resultCollectionDic.Add("Markdown", builder.ToString());
+                resultCollectionDic.Add(markdown.Key, builder.ToString());
             }
             catch (Exception ex)
             {
@@ -386,6 +358,6 @@ namespace CodeGen.Web.Controllers
             return result;
         }
 
-        #endregion
+#endregion
     }
 }
