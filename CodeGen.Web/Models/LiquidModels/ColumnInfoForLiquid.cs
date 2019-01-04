@@ -81,7 +81,7 @@ namespace CodeGen.Web.Models
                     result = (isNullable) ? "decimal?":"decimal";
                     break;
 
-                case string s when (s.Contains("time")):
+                case string s when (s.Contains("date")):
                     result = (isNullable) ? "DateTime?":"DateTime";
                     break;
                 default:
